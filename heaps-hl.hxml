@@ -1,5 +1,6 @@
 -cp src
--main Main
+#-main Main
+-main Main_Draft
 
 -lib heaps
 -lib hlsdl
