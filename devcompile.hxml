@@ -1,7 +1,5 @@
 -cp src
 #-p res
-#-main Main
--main Main_Draft
 
 -lib heaps
 -lib hlsdl
@@ -10,5 +8,11 @@
 
 -D resourcesPath=assets
 
+#-hl build/heaps/hl/Main.hl
+-hl run.hl
 
--hl build/heaps/hl/Main.hl
+
+
+#-main Main
+#-main Main_Draft
+-main Isometric

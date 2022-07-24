@@ -1,2 +1,5 @@
 *.hl
+*.js
 /ignore/
+#devcompile.hxml
+run.hl

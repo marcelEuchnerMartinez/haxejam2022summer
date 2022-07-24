@@ -1,4 +1,4 @@
-package ;
+/*package ;
 
 import haxe.ui.HaxeUIApp;
 
@@ -25,4 +25,4 @@ class Main extends HaxeUIApp {
 
         // Type the lopp dependent logic here
     }
-}
+}*/

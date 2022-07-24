@@ -1,4 +1,4 @@
-package ;
+/*package ;
 
 import haxe.ui.containers.VBox;
 import haxe.ui.events.MouseEvent;
@@ -16,4 +16,4 @@ class MainView extends VBox {
     private function onMyButton(e:MouseEvent) {
         button2.text = "Thanks!";
     }
-}
+}*/
