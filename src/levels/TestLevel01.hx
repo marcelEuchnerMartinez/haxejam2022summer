@@ -11,7 +11,7 @@ class TestLevel01 extends Level {
         super();
 
         var t = new h2d.Text( DefaultFont.get(), this );
-        t.text = "TestLevel01\n\nUse arrow keys or WASD to move around";
+        t.text = "TestLevel01\n\nUse arrow keys or WASD to move around\nPress SPACE to dash forward";
 
         player = new Player( this );
         player.setPosition( this.width/2, this.height/2 );
@@ -33,9 +33,10 @@ class TestLevel01 extends Level {
         var indent = false; // (every second line must be indented...)
         for( y in 0...90 ){
             for( x in 0...30 ){
-                //var random_index_x = Math.floor( Math.random() * 4 );
-                //var random_index_y = 1 + Math.floor( Math.random() * 4 );
-                background_tilegroup.add( (x *k)+(indent?(k/2):0), y *(9/*17/2*/), tilegroup_tile[0][0] ); // 17 / 2 ... ?? (8.5)
+                //var random_index_x = Math.floor( Math.random() * 2 );
+                //var random_index_y = 0; //Math.floor( Math.random() * 2 );
+                //background_tilegroup.add( (x *k)+(indent?(k/2):0), y *(9/*17/2*/), tilegroup_tile[random_index_x][random_index_y] ); // 17 / 2 ... ?? (8.5)
+                background_tilegroup.add( (x *k)+(indent?(k/2):0), y *(9/*17/2*/), tilegroup_tile[1][0] ); // 17 / 2 ... ?? (8.5)
             }
             indent = !indent;
         }
