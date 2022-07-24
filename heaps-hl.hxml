@@ -1,4 +1,5 @@
 -cp src
+#-p res
 #-main Main
 -main Main_Draft
 
@@ -8,5 +9,6 @@
 -lib haxeui-heaps
 
 -D resourcesPath=assets
+
 
 -hl build/heaps/hl/Main.hl

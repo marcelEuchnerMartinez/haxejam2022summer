@@ -6,5 +6,6 @@
 -lib haxeui-heaps
 
 -D resourcesPath=assets
+-p res
 
 -js build/heaps/js/Main.js

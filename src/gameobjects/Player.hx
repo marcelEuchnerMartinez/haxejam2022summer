@@ -6,6 +6,8 @@ class Player extends GameObject {
         super( lvl );
         sprite = new h2d.Bitmap( h2d.Tile.fromColor(0xFF0000,16,32), this );
         hitbox = sprite.getBounds();
+
+        level.add( this, level.LAYER_ENTITIES );
     }
 
     override function update() {

@@ -9,7 +9,7 @@ class GameObject extends h2d.Object {
 
     public function new( level_ : Level ) {
         level = level_;
-        super( level );
+        super(level);
     }
 
     public function update() {}

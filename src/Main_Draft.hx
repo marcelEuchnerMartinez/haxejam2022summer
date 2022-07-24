@@ -5,9 +5,9 @@ import levels.*;
 class Main_Draft extends hxd.App {
     static function main() {
         new Main_Draft();
-        //Res.initLocal();
+        hxd.Res.initLocal();
 
-        trace("hello");
+        trace("Haxe Jam 2022 - summer: Game by Taxmann, Hakkerwell, Amusei123");
     }
 
     var mylevel : TestLevel01;
