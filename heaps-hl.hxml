@@ -10,6 +10,8 @@
 
 -D resourcesPath=assets
 
+# works only for HashLink
+-D windowSize=1280x720
 
 -hl build/heaps/hl/Main.hl
 -D debug=true

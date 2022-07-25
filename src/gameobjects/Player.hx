@@ -6,10 +6,14 @@ class Player extends GameObject {
 
     public function new( lvl ) {
         super( lvl );
-        sprite = new h2d.Bitmap( h2d.Tile.fromColor(0xFF0000,16,32) ); //, this
+
+        useDummySprite_bottomCenter( 0xFF0000,16,32 );
+        
         hitbox = sprite.getBounds();
 
         level.add( this, level.LAYER_ENTITIES );
+
+        level.cam_player.follow = this;
     }
 
     override function update() {

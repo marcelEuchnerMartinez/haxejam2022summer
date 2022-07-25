@@ -5,16 +5,16 @@ import gameobjects.*;
 import Isometric;
 
 import hxd.Res;
-import hxd.res.DefaultFont;
 
 class TestLevel01 extends Level {
     
     public function new() {
         super();
 
-        var t = new h2d.Text( DefaultFont.get(), this );
-        t.text = "° ( -400, 0 )\nTestLevel01\n\nUse arrow keys or WASD to move around\nPress SPACE to dash forward";
-        t.setPosition( -400, 0 );
+        var t = new h2d.Text( UI.font() );
+        this.add( t, LAYER_HUD );
+        t.text = "TestLevel01\n\nUse arrow keys or WASD to move around\nPress SPACE to dash forward";
+        t.setPosition( 0, this.height - t.getBounds().height );
 
         player = new Player( this );
         player.setPosition( this.width/2, this.height/2 );
@@ -45,30 +45,35 @@ class TestLevel01 extends Level {
                     var t = new h2d.Text( UI.font(), this );
                     t.text = "° ( 0, 0 )";
                     t.setPosition( pos.x, pos.y + k ); // add k to y, because tile is at the bottom
+                    this.add( t, LAYER_ENTITIES );
                 }
 
                 if( x==2 && y==1 ){
                     var t = new h2d.Text( UI.font(), this );
                     t.text = "° ( 2, 1 )";
                     t.setPosition( pos.x, pos.y + k ); // add k to y, because tile is at the bottom
+                    this.add( t, LAYER_ENTITIES );
                 }
 
                 if( x==1 && y==2 ){
                     var t = new h2d.Text( UI.font(), this );
                     t.text = "° ( 1, 2 )";
                     t.setPosition( pos.x, pos.y + k ); // add k to y, because tile is at the bottom
+                    this.add( t, LAYER_ENTITIES );
                 }
 
                 if( x==4 && y==5 ){
                     var t = new h2d.Text( UI.font(), this );
                     t.text = "° ( 4, 5 )";
                     t.setPosition( pos.x, pos.y + k ); // add k to y, because tile is at the bottom
+                    this.add( t, LAYER_ENTITIES );
                 }
 
                 if( x==5 && y==4 ){
                     var t = new h2d.Text( UI.font(), this );
                     t.text = "° ( 5, 4 )";
                     t.setPosition( pos.x, pos.y + k ); // add k to y, because tile is at the bottom
+                    this.add( t, LAYER_ENTITIES );
                 }
                 
                 var tile = tilegroup_tile[1][0];

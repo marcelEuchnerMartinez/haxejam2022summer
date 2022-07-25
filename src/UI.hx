@@ -4,15 +4,28 @@ class UI {
 
     //public static final font : h2d.Font = null;
 
+    public static final COLOR_button_out  = 0xFF669999;
+    public static final COLOR_button_over = 0xFFb3cccc;
+    public static final COLOR_button_push = 0xFF334d4d;
+
     public static function button_160x16( ?parent ) {
-        return new Button( 160, 16, parent );
+        return button( 160, 16, parent );
     }
 
-    public static function text( ?parent ) {
+    public static function button( width, height, ?parent ){
+        var b = new Button( width, height, parent );
+        b.backgroundColor = COLOR_button_out;
+        b.onOver = (e)->{ b.backgroundColor = COLOR_button_over; };
+        b.onOut  = (e)->{ b.backgroundColor = COLOR_button_out;  };
+        b.onPush = (e)->{ b.backgroundColor = COLOR_button_push; };
+        return b;
+    }
+
+    public static function text( ?parent ){
         return new h2d.Text( font(), parent );
     }
 
-    public static function font() {
+    public static function font(){
         return hxd.res.DefaultFont.get();
     }
 
@@ -23,7 +36,7 @@ class UI {
 
 class Button extends h2d.Interactive {
     public var label : h2d.Text;
-    public function new( width, height, ?parent ) {
+    public function new( width, height, ?parent ){
         super( width, height, parent );
         label = new h2d.Text( hxd.res.DefaultFont.get(), this );
     }
