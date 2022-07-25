@@ -12,3 +12,4 @@
 
 
 -hl build/heaps/hl/Main.hl
+-D debug=true

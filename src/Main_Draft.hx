@@ -6,8 +6,9 @@ class Main_Draft extends hxd.App {
     static function main() {
         new Main_Draft();
         hxd.Res.initLocal();
-
-        trace("Haxe Jam 2022 - summer: Game by Taxmann, Hakkerwell, Amusei123");
+        #if sys
+        Sys.println("\n    Haxe Jam 2022 - summer: Game by Taxmann, Hakkerwell, Amusei123\n");
+        #end
     }
 
     var mylevel : TestLevel01;

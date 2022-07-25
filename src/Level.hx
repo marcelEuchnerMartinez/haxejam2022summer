@@ -52,16 +52,17 @@ class Level extends h2d.Scene {
 
     public function update() {
 
+        #if debug
         // dev info
         var info = "";
         var mx = Math.floor( this.mouseX *10 )/10;
         var my = Math.floor( this.mouseY *10 )/10;
         var wpos = Isometric.isometricScreen_to_world( mx, my );
-        var wx  = Math.floor( wpos.x *10 )/10;
-        var wy  = Math.floor( wpos.y *10 )/10;
+        //var wx  = Math.floor( wpos.x *10 )/10;
+        //var wy  = Math.floor( wpos.y *10 )/10;
         var wcx  = Math.floor( wpos.x *10 /16 )/10;
         var wcy  = Math.floor( wpos.y *10 /16 )/10;
-        info  =   'M. screen : $mx, $my';
+        info  =   'Iso.scr.M.: $mx, $my';
         info += '\nworld cell: $wcx, $wcy';
         devInfo.text = info;
         devInfo.setPosition( mx, my );
@@ -85,5 +86,6 @@ class Level extends h2d.Scene {
             cam.y += speed;
         if( hxd.Key.isDown(hxd.Key.UP   ) || hxd.Key.isDown(hxd.Key.W) )
             cam.y -= speed;
+        #end
     }
 }

@@ -44,13 +44,31 @@ class TestLevel01 extends Level {
                 if( x==0 && y==0 ){
                     var t = new h2d.Text( UI.font(), this );
                     t.text = "° ( 0, 0 )";
-                    t.setPosition( pos.x, pos.y );
+                    t.setPosition( pos.x, pos.y + k ); // add k to y, because tile is at the bottom
                 }
 
-                if( x==3 && y==2 ){
+                if( x==2 && y==1 ){
                     var t = new h2d.Text( UI.font(), this );
-                    t.text = "° ( 3, 2 )";
-                    t.setPosition( pos.x, pos.y );
+                    t.text = "° ( 2, 1 )";
+                    t.setPosition( pos.x, pos.y + k ); // add k to y, because tile is at the bottom
+                }
+
+                if( x==1 && y==2 ){
+                    var t = new h2d.Text( UI.font(), this );
+                    t.text = "° ( 1, 2 )";
+                    t.setPosition( pos.x, pos.y + k ); // add k to y, because tile is at the bottom
+                }
+
+                if( x==4 && y==5 ){
+                    var t = new h2d.Text( UI.font(), this );
+                    t.text = "° ( 4, 5 )";
+                    t.setPosition( pos.x, pos.y + k ); // add k to y, because tile is at the bottom
+                }
+
+                if( x==5 && y==4 ){
+                    var t = new h2d.Text( UI.font(), this );
+                    t.text = "° ( 5, 4 )";
+                    t.setPosition( pos.x, pos.y + k ); // add k to y, because tile is at the bottom
                 }
                 
                 var tile = tilegroup_tile[1][0];

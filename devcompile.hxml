@@ -16,3 +16,6 @@
 #-main Main
 #-main Main_Draft
 -main Isometric
+
+
+-D debug=true
