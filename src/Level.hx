@@ -5,6 +5,11 @@ import UI;
 
 class Level extends h2d.Scene {
 
+    // contained GameObjects
+    public var player : Player;
+    public var enemies : Array< DummyEnemy > = [];
+
+    // 
     public final LAYER_BACKGROUND = 0;
     public final LAYER_ENTITIES = 1;
     public final LAYER_WALLS = 2;
@@ -17,14 +22,13 @@ class Level extends h2d.Scene {
 
     public var devInfo : h2d.Text;
 
-    // contained GameObjects
-    public var player : Player;
-    //public var enemies : Array< Enemy > = [];
-
     public var cam_player : h2d.Camera;
     public var cam_HUD : h2d.Camera;
     public var cam_dev : h2d.Camera;
     public var devToolsPanel : h2d.Flow;
+    public var hud_currentLevel_h2dText : h2d.Text;
+
+    //public var allSpritesToYSort : Array< h2d.Object >;
 
     public function new() {
         super();
@@ -35,7 +39,7 @@ class Level extends h2d.Scene {
         this.add( background_tilegroup, LAYER_BACKGROUND );
 
         var k = 32;
-        tilegroup_tile = tileset.grid( k );    
+        tilegroup_tile = tileset.grid( k );
 
         // camera setup
 
@@ -65,6 +69,7 @@ class Level extends h2d.Scene {
         var dtp = new h2d.Flow(); // devToolsPanel
         this.add( dtp, LAYER_HUD );
         dtp.layout = h2d.Flow.FlowLayout.Vertical;
+        hud_currentLevel_h2dText = new h2d.Text( UI.font(), dtp ); hud_currentLevel_h2dText.text = "<LEVELNAME>";
         var b = UI.button_160x16( dtp );
         b.labelText("player camera");
         b.onClick = (e)->{
@@ -82,9 +87,18 @@ class Level extends h2d.Scene {
         dtp.setPosition( this.width - dtp.outerWidth, this.height - dtp.outerHeight );
         devToolsPanel = dtp;
         #end
+
+        //currentLevel_h2dText = new h2d.Text( UI.font(), this );
     }
 
     public function update() {
+
+        // game objects to update
+        player.update();
+        for( en in enemies )
+            en.update();
+
+        ysort( LAYER_ENTITIES );
 
         #if debug
         // dev info

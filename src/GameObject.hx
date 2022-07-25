@@ -1,19 +1,43 @@
 import h2d.Object;
 import h2d.col.Bounds;
 
-class GameObject extends h2d.Object {
+class GameObject {
 
+    public var spriteBase (get,null) : h2d.Object;
     public var sprite (default,set) : h2d.Object;
     public var level  : Level;
-    public var hitbox (get,default) : h2d.col.Bounds;
     //public var hitbox_onScreen (get,default) : h2d.col.Bounds;
+
+    public var x (default,set) : Float = 0;
+    public var y (default,set) : Float = 0;
+    public var hitbox (get,default) : h2d.col.Bounds;
 
     public function new( level_ : Level ) {
         level = level_;
-        super(level);
+        spriteBase = new h2d.Object(level);
     }
 
     public function update() {}
+
+    // methods required by fields
+
+    function set_x( _x ){
+        x = _x;
+        spriteBase.x = Isometric.world_to_IsometricScreen( x, y ).x;
+        return x;
+    }
+
+    function set_y( _y ){
+        y = _y;
+        spriteBase.y = Isometric.world_to_IsometricScreen( x, y ).y;
+        return y;
+    }
+
+    function get_spriteBase() {
+        var p = Isometric.world_to_IsometricScreen( x, y );
+        spriteBase.setPosition( p.x, p.y );
+        return spriteBase;
+    }
 
     function get_hitbox() {
         hitbox.x = this.x;
@@ -25,8 +49,16 @@ class GameObject extends h2d.Object {
         if( sprite!=null )
             sprite.remove();
         sprite = obj;
-        this.addChild( sprite ); // sprite.parent = this // doesn't seem to work
+        spriteBase.addChild( sprite ); // sprite.parent = this // doesn't seem to work
         return sprite;
+    }
+
+    //          idk
+
+    public function distanceSq( o:GameObject, ?o2:GameObject ){
+        if( o2==null )
+            o2 = this;
+        return hxd.Math.distanceSq( o.x - o2.x, o.y - o2.y);
     }
 
     //

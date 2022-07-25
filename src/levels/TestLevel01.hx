@@ -13,21 +13,33 @@ class TestLevel01 extends Level {
 
         var t = new h2d.Text( UI.font() );
         this.add( t, LAYER_HUD );
-        t.text = "TestLevel01\n\nUse arrow keys or WASD to move around\nPress SPACE to dash forward";
+        t.text = "Use arrow keys or WASD to move around\nPress SPACE to dash forward";
+        t.scale( 2 );
         t.setPosition( 0, this.height - t.getBounds().height );
 
-        player = new Player( this );
-        player.setPosition( this.width/2, this.height/2 );
+        new Player( this );
+        //player.setPosition( this.width/2, this.height/2 );
 
         // some grid by tilegroup tiles
         idea_grid02();
 
         background_tilegroup.alpha = 0.2;
+
+        hud_currentLevel_h2dText.text = "TestLevel01";
+
+        for( i in 0...4 ){
+            var en = new DummyEnemy(this);
+            //en.movingDirection = hxd.Math.random( Math.PI *2 );
+            var p1 = this.player;
+            en.movingDirection = hxd.Math.atan2( p1.y - y, p1.x - x );
+            var k = 400;
+            en.x = -k + hxd.Math.random(k);
+            en.y = -k + hxd.Math.random(k);
+        }
     }
 
     override public function update() {
         super.update();
-        player.update();
     }
 
     function idea_grid02() {
