@@ -16,12 +16,16 @@ class Isometric {
         //var convY = - (y*iso_h) + (x*iso_h);
         var iso_w : Float =   1;
         var iso_h : Float = 0.5;
-        var convX = x - (y*iso_w);
-        var convY = (y*2) + (x*iso_h);
+        //var convX = x - (y*iso_w);
+        //var convY = (y*2) + (x*iso_h);
         //var convX = x - y;
         //var convY = (y * 2) +x;
         //var vx = x - Math.cos(  );
         //var vy =
+        var convX = (x*0.5) - y;//(y*2)
+        var convY = y + (x*0.5); // seems correct
+        //var convX = ( x*iso_w) + (y*iso_w);
+        //var convY = (-x*2) + (y*2);
 
         return { x: convX , y: convY };
     }
@@ -124,13 +128,17 @@ class IsometricTest {
             ps.y = p.y;
         }
 
+        var m = "";
+        var success = false;
         if( pw.x == ps.x && pw.y == ps.y )
-            if( worldToIsometricScreen )
-                trace("check successful for world_to_IsometricScreen");
-            else
-                trace("check successful for isometricScreen_to_world");
+            success = true;
+        if( worldToIsometricScreen )
+            m += 'check ${(success?"successful":"FAILED(!)")} for world_to_IsometricScreen';
         else
-            trace( pw.toString() + " is not " + ps.toString() );
+            m += 'check ${(success?"successful":"FAILED(!)")} for isometricScreen_to_world';
+        if(!success)
+            m += ": pw: " + pw.toString() + " <-> ps: " + ps.toString();
+        trace(m);
     }
 
 }
