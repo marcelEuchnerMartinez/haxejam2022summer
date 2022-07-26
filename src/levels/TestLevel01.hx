@@ -83,7 +83,7 @@ class TestLevel01 extends Level {
     function idea_grid02() {
 
         // tileset
-        var k = 32/2;
+        var k = 32;//32/2;
         var indent = false; // (every second line must be indented...)
         for( y in 0...30 ){
             for( x in 0...30 ){
@@ -130,8 +130,10 @@ class TestLevel01 extends Level {
 
                 #end
                 
-                var tile = tilegroup_tile[1][0];
+                var tile = tilegroup_tile[0][0];
                 background_tilegroup.add( pos.x, pos.y, tile ); // 17 / 2 ... ?? (8.5)
+                //var tile = tilegroup_tile[1][0];
+                //background_tilegroup.add( pos.x, pos.y, tile ); // 17 / 2 ... ?? (8.5)
 
                 //trace(pos);
             }

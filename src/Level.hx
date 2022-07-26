@@ -36,12 +36,13 @@ class Level extends h2d.Scene {
     public function new() {
         super();
 
-        var tileset = hxd.Res.tileset.toTile();
+        //var tileset = hxd.Res.tileset.toTile();
+        var tileset = hxd.Res.Floor4_64.toTile();
 
         background_tilegroup = new h2d.TileGroup( tileset );
         this.add( background_tilegroup, LAYER_BACKGROUND );
 
-        var k = 32;
+        var k = 64;//32;
         tilegroup_tile = tileset.grid( k );
 
         // camera setup
@@ -161,7 +162,13 @@ class Level extends h2d.Scene {
         #end
     }
 
+    function turnWallIntoMathematicalFunction( p0_inner:h2d.col.Point, p1_inner:h2d.col.Point ) {
+        Isometric.world_to_IsometricScreen_point( p0_inner );
+        Isometric.world_to_IsometricScreen_point( p1_inner );
+    }
+
     function ysort_isometric( layer : Int ) {
+        //var all = enemies.copy().push(player);
 		if( layer >= layerCount ) return;
 		var start = layer == 0 ? 0 : layersIndexes[layer - 1];
 		var max = layersIndexes[layer];
