@@ -40,7 +40,7 @@ class DummyEnemy extends GameObject {
 
         var p1 = level.player;
 
-        var _canSeePlayer = playerInDistance(200);
+        var _canSeePlayer = (playerInDistance(200));// && canSeeThrough( p1.asPoint() ));
 
         if( _canSeePlayer )
             cast( sprite, h2d.Bitmap).color = h3d.Vector.fromColor(0xFFFFC400);

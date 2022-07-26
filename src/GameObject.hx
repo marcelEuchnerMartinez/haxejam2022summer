@@ -12,9 +12,12 @@ class GameObject {
     public var y (default,set) : Float = 0;
     public var hitbox (get,default) : h2d.col.Bounds;
 
-    public function new( level_ : Level ) {
+    public function new( level_ : Level, layer:Int=-1 ) {
         level = level_;
-        spriteBase = new h2d.Object(level);
+        spriteBase = new h2d.Object();
+        if( layer==-1 )
+            layer=level.LAYER_ENTITIES;
+        level.add( this.spriteBase, layer );
     }
 
     public function update() {}
@@ -55,6 +58,24 @@ class GameObject {
 
     //          idk
 
+    public function asPoint( ?o:GameObject ) {
+        if( o==null )
+            o=this;
+        return new h2d.col.Point( o.x, o.y );
+    }
+
+    public function canSeeThrough( p0:h2d.col.Point, ?p1:h2d.col.Point ) {
+        //var p = new h2d.col.Point(0,0);
+        //var p = new h2d.col.Point(0,0);
+        if( p1==null )
+            p1 = this.asPoint();
+        var l = new h2d.col.Line( p0, p1 );
+        for( w in level.walls )
+            if( l.intersectWith( w.asLine, p0 ) )
+                return false;
+        return true;
+    }
+
     public function distanceSq( o:GameObject, ?o2:GameObject ){
         if( o2==null )
             o2 = this;
@@ -64,6 +85,10 @@ class GameObject {
     //
     //          helper/convenience methods
     //
+
+    public function toString_coordinates() {
+        return '${Math.round(this.x*10)/10}|${Math.round(this.y*10)/10}';
+    }
 
     public function useDummySprite_bottomCenter( color=0xFF00FF, width=32, height=32, alpha=1 ) {
         var tile = h2d.Tile.fromColor( color, width, height, alpha ); tile.setCenterRatio( 0.5, 1 );

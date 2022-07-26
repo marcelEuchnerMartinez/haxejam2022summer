@@ -8,6 +8,14 @@ class Isometric {
     // 32 / 2 = 16 px W on screen
     //
 
+    public static function world_to_IsometricScreen_point ( p:h2d.col.Point ){
+        var c = world_to_IsometricScreen( p.x, p.y );
+        //var c = isometricScreen_to_world( p.x, p.y );
+        p.x = c.x;
+        p.y = c.y;
+        return p;
+    }
+
     public static function isometricScreen_to_world ( x:Float, y:Float ) {
 
         //var iso_w : Float =   1;

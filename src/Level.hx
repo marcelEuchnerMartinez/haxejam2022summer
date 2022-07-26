@@ -15,7 +15,7 @@ class Level extends h2d.Scene {
     public final LAYER_WALLS = 2;
     public final LAYER_HUD = 3;
 
-    public var walls   : Array< { bounds:h2d.col.Bounds } > = [];
+    public var walls   : Array< { asLine:h2d.col.Line } > = [];
     
     public var background_tilegroup : h2d.TileGroup;
     public var tilegroup_tile : Array<Array<h2d.Tile>>;
@@ -27,6 +27,9 @@ class Level extends h2d.Scene {
     public var cam_dev : h2d.Camera;
     public var devToolsPanel : h2d.Flow;
     public var hud_currentLevel_h2dText : h2d.Text;
+
+    // specials
+    var music = true;
 
     //public var allSpritesToYSort : Array< h2d.Object >;
 
@@ -71,6 +74,19 @@ class Level extends h2d.Scene {
         dtp.layout = h2d.Flow.FlowLayout.Vertical;
         hud_currentLevel_h2dText = new h2d.Text( UI.font(), dtp ); hud_currentLevel_h2dText.text = "<LEVELNAME>";
         var b = UI.button_160x16( dtp );
+        b.labelText("play/pause theme");
+        b.onClick = (e)->{
+            //var snd = new hxd.res.Sound( hxd.Res.Prototype_Theme.entry );
+            music = !music;
+            //SoundGroup.mono
+            if( !music )
+                hxd.Res.Prototype_Theme.play();
+                //snd.play(true);
+            else
+                hxd.Res.Prototype_Theme.stop();
+                //snd.stop();
+        };
+        var b = UI.button_160x16( dtp );
         b.labelText("player camera");
         b.onClick = (e)->{
             //this.camera.visible = true;
@@ -86,6 +102,11 @@ class Level extends h2d.Scene {
         };
         dtp.setPosition( this.width - dtp.outerWidth, this.height - dtp.outerHeight );
         devToolsPanel = dtp;
+
+
+
+        music = false;
+
         #end
 
         //currentLevel_h2dText = new h2d.Text( UI.font(), this );
@@ -98,7 +119,7 @@ class Level extends h2d.Scene {
         for( en in enemies )
             en.update();
 
-        ysort( LAYER_ENTITIES );
+        ysort_isometric( LAYER_ENTITIES );
 
         #if debug
         // dev info
@@ -139,4 +160,58 @@ class Level extends h2d.Scene {
         }
         #end
     }
+
+    function ysort_isometric( layer : Int ) {
+		if( layer >= layerCount ) return;
+		var start = layer == 0 ? 0 : layersIndexes[layer - 1];
+		var max = layersIndexes[layer];
+		if( start == max )
+			return;
+		var pos = start;
+		var ymax = children[pos++].y + children[pos++].x;
+		while( pos < max ) {
+			var c = children[pos];
+			if( c.y + c.x < ymax ) {
+				var p = pos - 1;
+				while( p >= start ) {
+					var c2 = children[p];
+					if( c.y + c.x >= c2.y + c2.x ) break;
+					children[p + 1] = c2;
+					p--;
+				}
+				children[p + 1] = c;
+				if ( c.allocated )
+					c.onHierarchyMoved(false);
+			} else
+				ymax = c.y + c.x;
+			pos++;
+		}
+	}
+
+    function ysort_isometric_001( layer : Int ) {
+		if( layer >= layerCount ) return;
+		var start = layer == 0 ? 0 : layersIndexes[layer - 1];
+		var max = layersIndexes[layer];
+		if( start == max )
+			return;
+		var pos = start;
+		var ymax = children[pos++].y + children[pos++].x;
+		while( pos < max ) {
+			var c = children[pos];
+			if( c.y + c.x < ymax ) {
+				var p = pos - 1;
+				while( p >= start ) {
+					var c2 = children[p];
+					if( c.y + c.x >= c2.y + c2.x ) break;
+					children[p + 1] = c2;
+					p--;
+				}
+				children[p + 1] = c;
+				if ( c.allocated )
+					c.onHierarchyMoved(false);
+			} else
+				ymax = c.y + c.x;
+			pos++;
+		}
+	}
 }

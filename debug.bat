@@ -1,0 +1,9 @@
+@ECHO OFF
+@echo COMPILING...
+haxe heaps-hl.hxml
+IF %ERRORLEVEL% EQU 0 ( 
+	@echo COMPILING SUCCESSFUL. ERRORLEVEL: %ERRORLEVEL%
+	hl .\build\heaps\hl\Main.hl
+) ELSE (
+	@echo COMPILING FAILED. ERRORLEVEL: %ERRORLEVEL%
+)

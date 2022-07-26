@@ -36,6 +36,44 @@ class TestLevel01 extends Level {
             en.x = -k + hxd.Math.random(k);
             en.y = -k + hxd.Math.random(k);
         }
+
+        for( i in 0...10 ){
+            var w = new GameObject( this );
+            w.x = hxd.Math.random(500);
+            w.y = hxd.Math.random(500);
+
+            var g = new h2d.Graphics();
+            w.sprite = g;
+
+            var p0_iso = new h2d.col.Point( w.x, w.y );
+            var a = Math.random();
+            var p1_iso = new h2d.col.Point( (a<0.5?p0_iso.x:p0_iso.x+hxd.Math.random(500)),(a>=0.5?p0_iso.y:p0_iso.y-hxd.Math.random(500)));
+            var asLine = new h2d.col.Line( p0_iso, p1_iso );
+            this.walls.push( {asLine:asLine} );
+            
+            g.beginFill( 0x505050 ); var c = 0.4;
+            var p1_screen = Isometric.world_to_IsometricScreen( p1_iso.x-w.x, p1_iso.y-w.y );
+            g.addVertex( 0, 0   , c, c, c, 1 );
+            g.addVertex( 0, 0-48, c, c, c, 1 );
+            g.addVertex( p1_screen.x, p1_screen.y-48, c, c, c, 1 );
+            g.addVertex( p1_screen.x, p1_screen.y   , c, c, c, 1 );
+            g.addVertex( 0, 0   , c, c, c, 1 );
+            /*var p0_screen = Isometric.world_to_IsometricScreen_point(p0_iso);
+            var p1_screen = Isometric.world_to_IsometricScreen_point(p1_iso);
+            g.addVertex( p0_screen.x, p0_screen.y   , c, c, c, 1 );
+            g.addVertex( p0_screen.x, p0_screen.y-48, c, c, c, 1 );
+            g.addVertex( p1_screen.x, p1_screen.y-48, c, c, c, 1 );
+            g.addVertex( p1_screen.x, p1_screen.y   , c, c, c, 1 );
+            g.addVertex( p0_screen.x, p0_screen.y   , c, c, c, 1 ); // ??*/
+            g.endFill();
+            g.lineStyle( 1, 0xFFFFFF );
+            g.drawCircle(0,0,2);
+
+            var t = UI.text( w.spriteBase );
+            t.text = w.toString_coordinates();
+            
+            //trace( p0_iso, p1_iso, p0_screen, p1_screen );
+        }
     }
 
     override public function update() {
@@ -52,6 +90,8 @@ class TestLevel01 extends Level {
 
                 // iso converting test
                 var pos = Isometric.world_to_IsometricScreen( x *k, y *k );
+
+                #if debug
 
                 if( x==0 && y==0 ){
                     var t = new h2d.Text( UI.font(), this );
@@ -87,6 +127,8 @@ class TestLevel01 extends Level {
                     t.setPosition( pos.x, pos.y + k ); // add k to y, because tile is at the bottom
                     this.add( t, LAYER_ENTITIES );
                 }
+
+                #end
                 
                 var tile = tilegroup_tile[1][0];
                 background_tilegroup.add( pos.x, pos.y, tile ); // 17 / 2 ... ?? (8.5)

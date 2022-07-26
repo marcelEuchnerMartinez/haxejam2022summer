@@ -7,7 +7,7 @@ class Main_Draft extends hxd.App {
         new Main_Draft();
         hxd.Res.initLocal();
         #if sys
-        Sys.println("\n    Haxe Jam 2022 - summer: Game by Taxmann, Hakkerwell, Amusei123\n");
+        Sys.println("\n    Haxe Jam 2022 - summer\n\n    Game by Taxmann, Hakkerwell, Amusei123\n");
         #end
     }
 
