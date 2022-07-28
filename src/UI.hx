@@ -6,9 +6,9 @@ class UI {
 
     //public static final font : h2d.Font = null;
 
-    public static final COLOR_button_out  = 0xFF669999;
-    public static final COLOR_button_over = 0xFFb3cccc;
-    public static final COLOR_button_push = 0xFF334d4d;
+    public static final COLOR_button_out  = 0xFF515151;//0xFF669999;
+    public static final COLOR_button_over = 0xFF490166;//0xFFb3cccc;
+    public static final COLOR_button_push = 0xFF2C003D;//0xFF334d4d;
 
     public static function button_400x50( ?parent ) {
         return button( 400, 50, parent );

@@ -11,6 +11,8 @@ class TestLevel01 extends Level {
     public function new() {
         super();
 
+        audio.playContinue( Audio.MusicState.THEME_INGAME );
+
         var t = new h2d.Text( UI.font() );
         this.add( t, LAYER_HUD );
         t.text = "Controls\nmove  - ARROW KEYS / W-A-S-D\ndash  - SPACE\nduck  - CTRL / SHIFT\nshoot - LEFT MOUSE";

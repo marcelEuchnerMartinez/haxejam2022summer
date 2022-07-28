@@ -2,6 +2,8 @@ package gameobjects;
 
 class Player extends GameObject {
 
+    public var isUntouchable = false;
+
     public var score : Int = 0;
 
     public var isDucking : Bool = false;
@@ -97,7 +99,7 @@ class Player extends GameObject {
         level.cageInsideScene( this );
 
         // player can shoot
-        if( hxd.Key.isPressed(hxd.Key.MOUSE_LEFT) ){
+        if( hxd.Key.isPressed(hxd.Key.MOUSE_LEFT) && isDucking==false ){
             var g = new h2d.Graphics();
             level.add( g, level.LAYER_ENTITIES );
             g.setPosition( spriteBase.x, spriteBase.y-24 );
@@ -135,6 +137,26 @@ class Player extends GameObject {
         if( hxd.Key.isReleased( hxd.Key.CTRL ) || hxd.Key.isReleased( hxd.Key.SHIFT ) ){
             isDucking = false;
             dummysprite_default();
+        }
+
+        // game over
+        if( lifepoints<=0 && !isUntouchable ){
+            lifepoints = 0;
+            isUntouchable = true;
+            var t = UI.text(); t.scale(3); t.text = 'GAME OVER\nscore: $score';
+            level.add( t, level.LAYER_HUD );
+            t.setPosition( (level.width/2) - (t.textWidth/2), level.height/2 );
+            score = 0;
+            haxe.Timer.delay(
+                ()->{
+                    score = 0;
+                    isUntouchable = false;
+                    this.placeAtRandomPosition();
+                    lifepoints = lifepoints_max;
+                    t.remove();
+                },
+                3*1000
+            );
         }
     }
 

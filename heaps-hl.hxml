@@ -5,3 +5,6 @@ config.hxml
 -lib hlsdl
 
 -hl build/heaps/hl/Main.hl
+
+-D resourcesPath=assets
+#-D resourcesPath=res

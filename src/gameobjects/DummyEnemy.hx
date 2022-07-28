@@ -2,6 +2,7 @@ package gameobjects;
 
 class DummyEnemy extends GameObject {
 
+    var ability_dash_lastDash : Float = -1;
     var ability_dash_cooldown : Float = 0;
 
     public var movingDirection : Float = 0;
@@ -32,13 +33,16 @@ class DummyEnemy extends GameObject {
         // dash ability
 
         if( ability_dash_cooldown > 0 )
-            ability_dash_cooldown -= 0.01;
+            ability_dash_cooldown -= 0.01; // make sure value 0.1 can be obtained !!!! otherwise can never dash player
         else
             ability_dash_cooldown = 0;
+
+        ability_dash_lastDash += 0.01;
 
         if( playerInDistance(50) && ability_dash_cooldown==0 ){
             speed = speed * 20;
             ability_dash_cooldown = 1;
+            ability_dash_lastDash = 0;
         }
 
         // movement
@@ -93,20 +97,29 @@ class DummyEnemy extends GameObject {
                 var angle = Math.atan2( en.y - this.y, en.x - this.x );
                 var kbx = Math.cos( angle ) *k;
                 var kby = Math.sin( angle ) *k;
-                en.x -= kbx;
-                en.y -= kby;
-                x += kbx;
-                y += kby;
+                en.x += kbx;
+                en.y += kby;
+                x -= kbx;
+                y -= kby;
             }
 
         // collision with player
-        if( this.playerInDistance(32,0,-16) && ability_dash_cooldown>0 && ability_dash_cooldown<1 ){ // enemy has *just* dashed
+        if( this.playerInDistance(32,0,-16) && ability_dash_lastDash==0 ){ // enemy has *just* dashed (!! make sure value can be obtained)
             var dmg = 5;
             level.player.lifepoints -= dmg;
             var t = UI.text(); level.add( t, level.LAYER_INFO );
             t.text = '-$dmg'; t.textColor = 0xFF0000; t.scale( 2 );
             t.setPosition( level.player.spriteBase.x, level.player.spriteBase.y );
-            var tm = haxe.Timer.delay( ()->{t.remove();}, 3*1000 );
+            //var tm = haxe.Timer.delay( ()->{t.remove();}, 3*1000 );
+            var u = new SmallUpdatableObject(level);
+            u.onUpdate = ()->{
+                t.alpha-=0.001;
+                t.y-=1;
+                if( t.alpha<0.1 ){
+                    u.remove();
+                    t.remove();
+                }
+            };
         }
 
         // can't leave "board"

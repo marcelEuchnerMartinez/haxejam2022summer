@@ -6,6 +6,8 @@ class Main_Draft extends hxd.App {
 
     public static var app : Main_Draft;
 
+    public static var audio : Audio;
+
     static function main() {
 
         app = new Main_Draft();
@@ -24,11 +26,12 @@ class Main_Draft extends hxd.App {
     
     override function init() {
 
-        hxd.Res.Prototype_Theme_16bit.play(true);
+        audio = new Audio();
     
         #if debug
-        setScene( new IntroScene() );
-        haxe.Timer.delay( ()->{ selectScene( new MainMenu() ); }, 6*1000 );
+        selectScene( new IntroScene_Engine() );
+        haxe.Timer.delay( ()->{ selectScene( new IntroScene_Names() ); }, 3*1000 );
+        haxe.Timer.delay( ()->{ selectScene( new MainMenu() ); }, 7*1000 );
         #else
         
         #end

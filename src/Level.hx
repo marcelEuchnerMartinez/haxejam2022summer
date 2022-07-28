@@ -37,8 +37,10 @@ class Level extends UpdatableScene {
 
     public var player_score : h2d.Text;
 
+    public var smallUpdatables : Array<SmallUpdatableObject> = [];//Array<{obj:h2d.Object,f:()->{}}> = [];
+
     // specials
-    var music = true;
+    var music = false;
 
     var player_health_bar : h2d.Graphics;
 
@@ -61,11 +63,11 @@ class Level extends UpdatableScene {
         f.layout = h2d.Flow.FlowLayout.Vertical;
         menuPanel = f;
         var b = UI.button_160x40(f); b.labelText("Main menu");
-        b.onClick = (e)->{ Main_Draft.app.setScene( new MainMenu() );};
+        b.onClick = (e)->{ Main_Draft.app.selectScene( new MainMenu() );};
         f.setPosition( this.width - f.outerWidth, 0 );
 
         var t = UI.text();
-        this.add( t, LAYER_HUD ); t.setPosition( width-100, 50 ); t.scale( 2 );
+        this.add( t, LAYER_HUD ); t.setPosition( width-150, 50 ); t.scale( 2 );
         player_score = t;
 
         // camera setup
@@ -105,11 +107,14 @@ class Level extends UpdatableScene {
             //SoundGroup.mono
             if( !music ){
                 //hxd.snd.Manager.get().masterSoundGroup.mono = true;
-                hxd.Res.Prototype_Theme_16bit.play(true);
+                audio.musicStopAll();
             }
                 //snd.play(true);
-            else
-                hxd.Res.Prototype_Theme_16bit.stop();
+            else {
+                //audio.musicStopAll();
+                //audio.theme_ingame.play( true );
+                audio.playContinue( Audio.MusicState.THEME_INGAME );
+            }
                 //snd.stop();
         };
         var b = UI.button_160x16( dtp );
@@ -202,6 +207,9 @@ class Level extends UpdatableScene {
             player_health_bar.endFill();
             player_health_bar.setPosition( this.width/2, this.height-34 );
         }
+
+        for( e in smallUpdatables )
+            e.onUpdate();
     }
 
     public function cageInsideScene( o:GameObject ){
