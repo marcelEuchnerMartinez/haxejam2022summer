@@ -1,11 +1,5 @@
--cp src
--main Main
-
--lib heaps
--lib haxeui-core
--lib haxeui-heaps
-
--D resourcesPath=assets
--p res
+config.hxml
 
 -js build/heaps/js/Main.js
+
+-D resourcesPath=res

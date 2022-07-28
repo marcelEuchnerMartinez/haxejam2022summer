@@ -21,6 +21,11 @@ class DummyEnemy extends GameObject {
         level.enemies.push( this );
     }
 
+    override function remove() {
+        super.remove();
+        level.enemies.remove( this );
+    }
+
     override function update() {
         var speed = 1;
 
@@ -40,7 +45,10 @@ class DummyEnemy extends GameObject {
 
         var p1 = level.player;
 
-        var _canSeePlayer = (playerInDistance(200));// && canSeeThrough( p1.asPoint() ));
+        var _canSeePlayer = (playerInDistance(200));  // && canSeeThrough( p1.asPoint() ));
+
+        if( level.player.isDucking )
+            _canSeePlayer = playerInDistance(66);
 
         if( _canSeePlayer )
             cast( sprite, h2d.Bitmap).color = h3d.Vector.fromColor(0xFFFFC400);
@@ -79,16 +87,31 @@ class DummyEnemy extends GameObject {
         y += Math.sin( movingDirection ) * speed;
 
         // collison with other enemies
-        var k = 20;
+        var k = 4;
         for( en in level.enemies )
-            if( en!=this && en.distanceSq( this )<20 ){
-                x += -k + hxd.Math.random( k );
-                y -= -k + hxd.Math.random( k );
+            if( en!=this && en.distanceSq( this )<144 ){
+                var angle = Math.atan2( en.y - this.y, en.x - this.x );
+                var kbx = Math.cos( angle ) *k;
+                var kby = Math.sin( angle ) *k;
+                en.x -= kbx;
+                en.y -= kby;
+                x += kbx;
+                y += kby;
             }
 
+        // collision with player
+        if( this.playerInDistance(32,0,-16) && ability_dash_cooldown>0 && ability_dash_cooldown<1 ){ // enemy has *just* dashed
+            var dmg = 5;
+            level.player.lifepoints -= dmg;
+            var t = UI.text(); level.add( t, level.LAYER_INFO );
+            t.text = '-$dmg'; t.textColor = 0xFF0000; t.scale( 2 );
+            t.setPosition( level.player.spriteBase.x, level.player.spriteBase.y );
+            var tm = haxe.Timer.delay( ()->{t.remove();}, 3*1000 );
+        }
+
         // can't leave "board"
-        var k=500;
-        if( x<-k || x>k || y<-k || y>k )
+        var k=1000;
+        if( x<0 || x>k || y<0 || y>k )
             movingDirection = movingDirection+Math.PI+hxd.Math.random(Math.PI*0.2);
         if(movingDirection>Math.PI*2)
             movingDirection -= Math.PI*2;
@@ -96,8 +119,8 @@ class DummyEnemy extends GameObject {
             movingDirection += Math.PI*2;
     }
 
-    function playerInDistance( distance:Float ) {
-        if( hxd.Math.distanceSq(level.player.x - this.x, level.player.y - this.y) < distance*distance )
+    function playerInDistance( distance:Float, offset_x:Float=0, offset_y:Float=0 ) {
+        if( hxd.Math.distanceSq( (level.player.x + offset_x) - this.x, (level.player.y + offset_y) - this.y) < distance*distance )
             return true
         else
             return false;

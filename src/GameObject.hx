@@ -22,6 +22,10 @@ class GameObject {
 
     public function update() {}
 
+    public function remove() {
+        spriteBase.remove();
+    }
+
     // methods required by fields
 
     function set_x( _x ){
@@ -85,6 +89,11 @@ class GameObject {
     //
     //          helper/convenience methods
     //
+
+    public function placeAtRandomPosition( board_size:Int=1000 ) {
+        x = hxd.Math.random(board_size);
+        y = hxd.Math.random(board_size);
+    }
 
     public function toString_coordinates() {
         return '${Math.round(this.x*10)/10}|${Math.round(this.y*10)/10}';

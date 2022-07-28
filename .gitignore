@@ -1,5 +1,9 @@
 *.hl
 *.js
+*.pak
+*.zip
+
 /ignore/
+/res/
+
 #devcompile.hxml
-run.hl

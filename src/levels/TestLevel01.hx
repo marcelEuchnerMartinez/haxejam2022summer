@@ -13,7 +13,7 @@ class TestLevel01 extends Level {
 
         var t = new h2d.Text( UI.font() );
         this.add( t, LAYER_HUD );
-        t.text = "Use arrow keys or WASD to move around\nPress SPACE to dash forward";
+        t.text = "Controls\nmove  - ARROW KEYS / W-A-S-D\ndash  - SPACE\nduck  - CTRL / SHIFT\nshoot - LEFT MOUSE";
         t.scale( 2 );
         t.setPosition( 0, this.height - t.getBounds().height );
 
@@ -23,7 +23,7 @@ class TestLevel01 extends Level {
         // some grid by tilegroup tiles
         idea_grid02();
 
-        background_tilegroup.alpha = 0.2;
+        //background_tilegroup.alpha = 0.2;
 
         hud_currentLevel_h2dText.text = "TestLevel01";
 
@@ -32,11 +32,17 @@ class TestLevel01 extends Level {
             //en.movingDirection = hxd.Math.random( Math.PI *2 );
             var p1 = this.player;
             en.movingDirection = hxd.Math.atan2( p1.y - y, p1.x - x );
-            var k = 400;
-            en.x = -k + hxd.Math.random(k);
-            en.y = -k + hxd.Math.random(k);
+            en.placeAtRandomPosition();
         }
 
+        //idea_dummywalls();
+    }
+
+    override public function update() {
+        super.update();
+    }
+
+    function idea_dummywalls() {
         for( i in 0...10 ){
             var w = new GameObject( this );
             w.x = hxd.Math.random(500);
@@ -76,10 +82,6 @@ class TestLevel01 extends Level {
         }
     }
 
-    override public function update() {
-        super.update();
-    }
-
     function idea_grid02() {
 
         // tileset
@@ -96,42 +98,42 @@ class TestLevel01 extends Level {
                 if( x==0 && y==0 ){
                     var t = new h2d.Text( UI.font(), this );
                     t.text = "° ( 0, 0 )";
-                    t.setPosition( pos.x, pos.y + k ); // add k to y, because tile is at the bottom
+                    t.setPosition( pos.x, pos.y ); // add k to y, because tile is at the bottom
                     this.add( t, LAYER_ENTITIES );
                 }
 
                 if( x==2 && y==1 ){
                     var t = new h2d.Text( UI.font(), this );
                     t.text = "° ( 2, 1 )";
-                    t.setPosition( pos.x, pos.y + k ); // add k to y, because tile is at the bottom
+                    t.setPosition( pos.x, pos.y ); // add k to y, because tile is at the bottom
                     this.add( t, LAYER_ENTITIES );
                 }
 
                 if( x==1 && y==2 ){
                     var t = new h2d.Text( UI.font(), this );
                     t.text = "° ( 1, 2 )";
-                    t.setPosition( pos.x, pos.y + k ); // add k to y, because tile is at the bottom
+                    t.setPosition( pos.x, pos.y ); // add k to y, because tile is at the bottom
                     this.add( t, LAYER_ENTITIES );
                 }
 
                 if( x==4 && y==5 ){
                     var t = new h2d.Text( UI.font(), this );
                     t.text = "° ( 4, 5 )";
-                    t.setPosition( pos.x, pos.y + k ); // add k to y, because tile is at the bottom
+                    t.setPosition( pos.x, pos.y ); // add k to y, because tile is at the bottom
                     this.add( t, LAYER_ENTITIES );
                 }
 
                 if( x==5 && y==4 ){
                     var t = new h2d.Text( UI.font(), this );
                     t.text = "° ( 5, 4 )";
-                    t.setPosition( pos.x, pos.y + k ); // add k to y, because tile is at the bottom
+                    t.setPosition( pos.x, pos.y ); // add k to y, because tile is at the bottom
                     this.add( t, LAYER_ENTITIES );
                 }
 
                 #end
                 
                 var tile = tilegroup_tile[0][0];
-                background_tilegroup.add( pos.x, pos.y, tile ); // 17 / 2 ... ?? (8.5)
+                background_tilegroup.add( pos.x, pos.y-(k*1.5), tile ); // -(k + (k/2)) because the upper half of the tile is actually empty and also use the vertical center of the remaining tile
                 //var tile = tilegroup_tile[1][0];
                 //background_tilegroup.add( pos.x, pos.y, tile ); // 17 / 2 ... ?? (8.5)
 

@@ -3,17 +3,22 @@ import gameobjects.*;
 
 import UI;
 
-class Level extends h2d.Scene {
+class Level extends UpdatableScene {
 
     // contained GameObjects
     public var player : Player;
     public var enemies : Array< DummyEnemy > = [];
+    public var goals_pickup : Array< GameObject > = [];
 
     // 
     public final LAYER_BACKGROUND = 0;
     public final LAYER_ENTITIES = 1;
     public final LAYER_WALLS = 2;
-    public final LAYER_HUD = 3;
+    public final LAYER_INFO = 3;
+    public final LAYER_HUD = 4;
+
+    public var level_width  (default,never) : Int = 1000;
+    public var level_height (default,never) : Int = 1000;
 
     public var walls   : Array< { asLine:h2d.col.Line } > = [];
     
@@ -28,8 +33,14 @@ class Level extends h2d.Scene {
     public var devToolsPanel : h2d.Flow;
     public var hud_currentLevel_h2dText : h2d.Text;
 
+    public var menuPanel : h2d.Flow;
+
+    public var player_score : h2d.Text;
+
     // specials
     var music = true;
+
+    var player_health_bar : h2d.Graphics;
 
     //public var allSpritesToYSort : Array< h2d.Object >;
 
@@ -44,6 +55,18 @@ class Level extends h2d.Scene {
 
         var k = 64;//32;
         tilegroup_tile = tileset.grid( k );
+
+        var f = new h2d.Flow();
+        this.add( f, LAYER_HUD );
+        f.layout = h2d.Flow.FlowLayout.Vertical;
+        menuPanel = f;
+        var b = UI.button_160x40(f); b.labelText("Main menu");
+        b.onClick = (e)->{ Main_Draft.app.setScene( new MainMenu() );};
+        f.setPosition( this.width - f.outerWidth, 0 );
+
+        var t = UI.text();
+        this.add( t, LAYER_HUD ); t.setPosition( width-100, 50 ); t.scale( 2 );
+        player_score = t;
 
         // camera setup
 
@@ -80,11 +103,13 @@ class Level extends h2d.Scene {
             //var snd = new hxd.res.Sound( hxd.Res.Prototype_Theme.entry );
             music = !music;
             //SoundGroup.mono
-            if( !music )
-                hxd.Res.Prototype_Theme.play();
+            if( !music ){
+                //hxd.snd.Manager.get().masterSoundGroup.mono = true;
+                hxd.Res.Prototype_Theme_16bit.play(true);
+            }
                 //snd.play(true);
             else
-                hxd.Res.Prototype_Theme.stop();
+                hxd.Res.Prototype_Theme_16bit.stop();
                 //snd.stop();
         };
         var b = UI.button_160x16( dtp );
@@ -111,9 +136,12 @@ class Level extends h2d.Scene {
         #end
 
         //currentLevel_h2dText = new h2d.Text( UI.font(), this );
+
+        player_health_bar = new h2d.Graphics();
+        this.add( player_health_bar, LAYER_HUD );
     }
 
-    public function update() {
+    override function update() {
 
         // game objects to update
         player.update();
@@ -124,7 +152,7 @@ class Level extends h2d.Scene {
 
         #if debug
         // dev info
-        var info = "";
+        /*var info = "";
         var mp = new h2d.col.Point( this.mouseX, this.mouseY );
         cam_player.sceneToCamera( mp ); //or screenToCamera ?
         var mx = Math.floor( mp.x *10 )/10;
@@ -137,7 +165,7 @@ class Level extends h2d.Scene {
         info  =   'Iso.scr.M.: $mx, $my';
         info += '\nworld cell: $wcx, $wcy';
         devInfo.text = info;
-        devInfo.setPosition( this.mouseX, this.mouseY );
+        devInfo.setPosition( this.mouseX, this.mouseY );*/
 
         // camera
         var cam = (cam_player.visible?cam_player:cam_dev);
@@ -160,6 +188,46 @@ class Level extends h2d.Scene {
                 cam.y -= speed;
         }
         #end
+
+        // player health
+        // health bar
+        player_health_bar.clear();
+        if( player!=null ){
+            player_health_bar.lineStyle( 1, 0x0F21E4 );
+            player_health_bar.beginFill( 0x0 );
+            player_health_bar.drawRect( -300, 0, 600, 32 );
+            player_health_bar.beginFill( 0xFF0000 );
+            var health_in_percent = player.lifepoints / player.lifepoints_max;
+            player_health_bar.drawRect( -300, 0, 600 * health_in_percent, 32 );
+            player_health_bar.endFill();
+            player_health_bar.setPosition( this.width/2, this.height-34 );
+        }
+    }
+
+    public function cageInsideScene( o:GameObject ){
+        var w = level_width;
+        var h = level_height;
+        if( o.x < 0 )
+            o.x = 0;//this.width;
+        if( o.y < 0 )
+            o.y = 0;//this.height;
+        if( o.x > w )//this.width )
+            o.x = w;
+        if( o.y > h )//this.height )
+            o.y = h;
+    }
+
+    public function wrapInsideScene( o:GameObject ){
+        var w = level_width;
+        var h = level_height;
+        if( o.x < 0 )
+            o.x = w;//this.width;
+        if( o.y < 0 )
+            o.y = h;//this.height;
+        if( o.x > w )//this.width )
+            o.x = 0;
+        if( o.y > h )//this.height )
+            o.y = 0;
     }
 
     function turnWallIntoMathematicalFunction( p0_inner:h2d.col.Point, p1_inner:h2d.col.Point ) {

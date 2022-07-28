@@ -1,5 +1,7 @@
 package;
 
+import hxd.Res;
+
 class UI {
 
     //public static final font : h2d.Font = null;
@@ -8,16 +10,24 @@ class UI {
     public static final COLOR_button_over = 0xFFb3cccc;
     public static final COLOR_button_push = 0xFF334d4d;
 
+    public static function button_400x50( ?parent ) {
+        return button( 400, 50, parent );
+    }
+
+    public static function button_160x40( ?parent ) {
+        return button( 160, 40, parent );
+    }
+
     public static function button_160x16( ?parent ) {
         return button( 160, 16, parent );
     }
 
-    public static function button( width, height, ?parent ){
+    public static function button( width, height, ?parent, ?sound:hxd.res.Sound ){
         var b = new Button( width, height, parent );
         b.backgroundColor = COLOR_button_out;
         b.onOver = (e)->{ b.backgroundColor = COLOR_button_over; };
         b.onOut  = (e)->{ b.backgroundColor = COLOR_button_out;  };
-        b.onPush = (e)->{ b.backgroundColor = COLOR_button_push; };
+        b.onPush = (e)->{ b.backgroundColor = COLOR_button_push; if(sound==null)sound=hxd.Res.select_low; sound.play(); };
         return b;
     }
 

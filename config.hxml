@@ -1,0 +1,11 @@
+-cp src
+#-p res
+#-main Main
+-main Main_Draft
+
+-lib heaps
+
+#-lib haxeui-core
+#-lib haxeui-heaps
+
+-D debug=true

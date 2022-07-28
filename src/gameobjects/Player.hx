@@ -2,14 +2,23 @@ package gameobjects;
 
 class Player extends GameObject {
 
+    public var score : Int = 0;
+
+    public var isDucking : Bool = false;
+
+    public var lifepoints     = 30;
+    public var lifepoints_max = 30;
+
     var ability_dash_cooldown : Float = 0;
 
     public var adaptMovementToIsometricScreen = true;
 
+    public var bullets : Array<h2d.Graphics> = [];
+
     public function new( lvl ) {
         super( lvl );
 
-        useDummySprite_bottomCenter( 0xFF0000,16,32 );
+        dummysprite_default();
         
         hitbox = sprite.getBounds();
 
@@ -21,7 +30,10 @@ class Player extends GameObject {
     }
 
     override function update() {
-        var speed = 2;
+        var speed : Float = 2;
+
+        if( isDucking )
+            speed = 0.5;
 
         // dash ability
 
@@ -80,6 +92,58 @@ class Player extends GameObject {
                 else
                     this.y -= speed;
         }
+
+        // cage player
+        level.cageInsideScene( this );
+
+        // player can shoot
+        if( hxd.Key.isPressed(hxd.Key.MOUSE_LEFT) ){
+            var g = new h2d.Graphics();
+            level.add( g, level.LAYER_ENTITIES );
+            g.setPosition( spriteBase.x, spriteBase.y-24 );
+            g.beginFill( 0x0 );
+            g.drawCircle( 0, 0, 4 );
+            hxd.Res.shot_1.play(false,0.2);
+            bullets.push( g );
+            //g.rotation = Math.atan2( level.mouseY - g.y, level.mouseX - g.x );
+            var mouse = new h2d.col.Point( level.mouseX, level.mouseY );
+            level.cam_player.sceneToCamera( mouse );
+            g.rotation = Math.atan2( mouse.y - spriteBase.y, mouse.x - spriteBase.x );
+        }
+
+        // move bullets
+        for( b in bullets ){
+            var s = 10;
+            b.move( s, s );
+            for( en in level.enemies ){
+                if( hxd.Math.distanceSq( en.spriteBase.x-b.x, en.spriteBase.y-16-b.y )<256 ){ // -16 will be center of the enemy's body
+                    //en.remove();
+                    en.placeAtRandomPosition();
+                    b.remove();
+                    score ++;
+                    level.player_score.text = 'score: $score';
+                    //bullets.remove( b ); // ?
+                }
+            }
+        }
+
+        // ducking
+        if( hxd.Key.isPressed( hxd.Key.CTRL ) || hxd.Key.isDown( hxd.Key.SHIFT ) ){
+            isDucking = true;
+            dummysprite_ducking();
+        }
+        if( hxd.Key.isReleased( hxd.Key.CTRL ) || hxd.Key.isReleased( hxd.Key.SHIFT ) ){
+            isDucking = false;
+            dummysprite_default();
+        }
+    }
+
+    function dummysprite_default() {
+        useDummySprite_bottomCenter( 0xFF0000,16,32 );
+    }
+
+    function dummysprite_ducking() {
+        useDummySprite_bottomCenter( 0x770303,16,20 );
     }
 
     /*function move_isoPos( dx:Float, dy:Float ) {
