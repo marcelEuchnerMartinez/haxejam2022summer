@@ -1,4 +1,5 @@
 
+import h2d.TileGroup;
 import gameobjects.*;
 
 import UI;
@@ -9,6 +10,7 @@ class Level extends UpdatableScene {
     public var player : Player;
     public var enemies : Array< DummyEnemy > = [];
     public var goals_pickup : Array< GameObject > = [];
+    public var items : Array< GameObject > = [];
 
     // 
     public final LAYER_BACKGROUND = 0;
@@ -17,13 +19,10 @@ class Level extends UpdatableScene {
     public final LAYER_INFO = 3;
     public final LAYER_HUD = 4;
 
-    public var level_width  (default,never) : Int = 1000;
-    public var level_height (default,never) : Int = 1000;
+    public var level_width  /*(default,never)*/ : Int = 1000;
+    public var level_height /*(default,never)*/ : Int = 1000;
 
     public var walls   : Array< { asLine:h2d.col.Line } > = [];
-    
-    public var background_tilegroup : h2d.TileGroup;
-    public var tilegroup_tile : Array<Array<h2d.Tile>>;
 
     public var devInfo : h2d.Text;
 
@@ -44,19 +43,34 @@ class Level extends UpdatableScene {
 
     var player_health_bar : h2d.Graphics;
 
+    // tilegroups / tilesets / background
+
+    public var background_tilegroup_tilegrid : h2d.TileGroup;
+    public var tileset_tilegrid : Array<Array<h2d.Tile>>;
+
+    public var background_tilegroup_mallFloor01 : h2d.TileGroup;
+    public var tileset_mallFloor01 : Array<Array<h2d.Tile>>;
+
+    public var background_tilegroup_asiaFloor01 : h2d.TileGroup;
+    public var tileset_asiaFloor01 : Array<Array<h2d.Tile>>;
+    
     //public var allSpritesToYSort : Array< h2d.Object >;
 
     public function new() {
         super();
 
-        //var tileset = hxd.Res.tileset.toTile();
-        var tileset = hxd.Res.Floor4_64.toTile();
+        var a = addNewTilegroup( hxd.Res.tileset );
+        background_tilegroup_tilegrid = a.g;
+        tileset_tilegrid = a.t.grid( 32 );
 
-        background_tilegroup = new h2d.TileGroup( tileset );
-        this.add( background_tilegroup, LAYER_BACKGROUND );
+        var a = addNewTilegroup( hxd.Res.Floor4_64 );
+        background_tilegroup_mallFloor01 = a.g;
+        tileset_mallFloor01 = a.t.grid( 64 );
 
-        var k = 64;//32;
-        tilegroup_tile = tileset.grid( k );
+        var a = addNewTilegroup( hxd.Res.Floor5_170 );
+        background_tilegroup_asiaFloor01 = a.g;
+        tileset_asiaFloor01 = a.t.grid( 170 );
+
 
         var f = new h2d.Flow();
         this.add( f, LAYER_HUD );
@@ -86,7 +100,6 @@ class Level extends UpdatableScene {
         this.addCamera(cam_HUD);
         this.interactiveCamera = cam_HUD; // tells scene to use this camera for button interaction (h2d.Interactive)
 
-        #if debug
         // 3. dev camera
         cam_dev = new h2d.Camera(this);
         cam_dev.layerVisible = (L) -> (L != LAYER_HUD);
@@ -99,6 +112,7 @@ class Level extends UpdatableScene {
         this.add( dtp, LAYER_HUD );
         dtp.layout = h2d.Flow.FlowLayout.Vertical;
         hud_currentLevel_h2dText = new h2d.Text( UI.font(), dtp ); hud_currentLevel_h2dText.text = "<LEVELNAME>";
+        #if debug
         var b = UI.button_160x16( dtp );
         b.labelText("play/pause theme");
         b.onClick = (e)->{
@@ -152,8 +166,11 @@ class Level extends UpdatableScene {
         player.update();
         for( en in enemies )
             en.update();
+        for( i in items )
+            i.update();
 
-        ysort_isometric( LAYER_ENTITIES );
+        //ysort_isometric( LAYER_ENTITIES );
+        ysort( LAYER_ENTITIES );
 
         #if debug
         // dev info
@@ -172,6 +189,7 @@ class Level extends UpdatableScene {
         devInfo.text = info;
         devInfo.setPosition( this.mouseX, this.mouseY );*/
 
+        #end
         // camera
         var cam = (cam_player.visible?cam_player:cam_dev);
         // zoom in/out by mouse wheel
@@ -192,7 +210,7 @@ class Level extends UpdatableScene {
             if( hxd.Key.isDown(hxd.Key.UP   ) || hxd.Key.isDown(hxd.Key.W) )
                 cam.y -= speed;
         }
-        #end
+        
 
         // player health
         // health bar
@@ -212,30 +230,57 @@ class Level extends UpdatableScene {
             e.onUpdate();
     }
 
-    public function cageInsideScene( o:GameObject ){
-        var w = level_width;
-        var h = level_height;
-        if( o.x < 0 )
-            o.x = 0;//this.width;
-        if( o.y < 0 )
-            o.y = 0;//this.height;
-        if( o.x > w )//this.width )
-            o.x = w;
-        if( o.y > h )//this.height )
-            o.y = h;
+    function addNewTilegroup( tileset_resource:hxd.res.Image, ?layer:Int=-1 ) : {g:h2d.TileGroup, t:h2d.Tile} {
+        var tileset = tileset_resource.toTile();
+        var g = new h2d.TileGroup( tileset );
+        if( layer==-1 )
+            layer = LAYER_BACKGROUND;
+        this.add( g, layer );
+        return { g:g, t:tileset };
     }
 
-    public function wrapInsideScene( o:GameObject ){
+    public function cageInsideScene( o:GameObject ) : Bool/*{check:Bool,angle:Float}*/ {
         var w = level_width;
         var h = level_height;
-        if( o.x < 0 )
+        if( o.x < 0 ){
+            o.x = 0;//this.width;
+            return true;
+        }
+        if( o.y < 0 ){
+            o.y = 0;//this.height;
+            return true;
+        }
+        if( o.x > w ){//this.width )
+            o.x = w;
+            return true;
+        }
+        if( o.y > h ){//this.height )
+            o.y = h;
+            return true;
+        }
+        return false;
+    }
+
+    public function wrapInsideScene( o:GameObject ) : Bool/*{check:Bool,angle:Float}*/ {
+        var w = level_width;
+        var h = level_height;
+        if( o.x < 0 ){
             o.x = w;//this.width;
-        if( o.y < 0 )
+            return true;
+        }
+        if( o.y < 0 ){
             o.y = h;//this.height;
-        if( o.x > w )//this.width )
+            return true;
+        }
+        if( o.x > w ){//this.width )
             o.x = 0;
-        if( o.y > h )//this.height )
+            return true;
+        }
+        if( o.y > h ){//this.height )
             o.y = 0;
+            return true;
+        }
+        return false;
     }
 
     function turnWallIntoMathematicalFunction( p0_inner:h2d.col.Point, p1_inner:h2d.col.Point ) {

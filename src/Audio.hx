@@ -1,13 +1,15 @@
 package;
 
 class Audio {
+
+    public var isMuted = false;
     
-    var theme_ingame = hxd.Res.Prototype_Theme_16bit;
-    var theme_launch = hxd.Res.Eerie_One_Cut__80s;
-    var theme_launch1 = hxd.Res.Eerie_One_Cut__80s;
-    #if sys
-    var theme_launch2 = hxd.Res.Eerie_One_Cut__bells;
-    #end
+    var theme_launch        = hxd.Res.music.Eerie_One_Cut__80s;
+    var theme_ingame        = hxd.Res.music.Prototype_Theme_16bit;
+    var theme_beginnerarea  = hxd.Res.music.Gameplay_Music_Loop;
+
+    var theme_launch1       = hxd.Res.music.Eerie_One_Cut__80s;
+    var theme_launch2       = hxd.Res.music.Eerie_One_Cut__bells;
 
     var music_state : MusicState;
 
@@ -17,31 +19,36 @@ class Audio {
         if( music_state!=music ){
             musicStopAll();
             switchMusicState(music);
-            music_state=music;
         }
     }
 
     function switchMusicState( music:MusicState ) {
-        switch(music){
-            case THEME_INGAME:
-                theme_ingame.play(true);
-            case THEME_LAUNCH:
-                theme_launch.play(true);
-            default:
+        music_state=music;
+        if(!isMuted){
+            switch(music_state){
+                case THEME_INGAME:
+                    theme_ingame.play(true);
+                case THEME_LAUNCH:
+                    theme_launch.play(true);
+                case THEME_BEGINNERAREA:
+                    theme_beginnerarea.play(true);
+                default:
+            }
         }
+        trace('$music_state');
     }
 
     public function musicStopAll() {
         theme_ingame.stop();
+        theme_beginnerarea.stop();
         theme_launch.stop();
         theme_launch1.stop();
-        #if sys
         theme_launch2.stop();
-        #end
     }
 }
 
 enum MusicState {
     THEME_INGAME;
     THEME_LAUNCH;
+    THEME_BEGINNERAREA;
 }

@@ -27,14 +27,19 @@ class Main_Draft extends hxd.App {
     override function init() {
 
         audio = new Audio();
-    
-        #if debug
-        selectScene( new IntroScene_Engine() );
-        haxe.Timer.delay( ()->{ selectScene( new IntroScene_Names() ); }, 3*1000 );
-        haxe.Timer.delay( ()->{ selectScene( new MainMenu() ); }, 7*1000 );
-        #else
-        
+
+        #if !music
+        audio.isMuted = true;
+        if(audio.isMuted)trace("MUSIC IS MUTED (!)");
         #end
+    
+        /*#if debug
+        selectLevel();
+        #else*/
+        selectScene( new IntroScene_Engine() );
+        haxe.Timer.delay( ()->{ if(Std.isOfType(s2d,IntroScene_Engine)) selectScene( new IntroScene_Names() ); }, 3*1000 );
+        haxe.Timer.delay( ()->{ if(Std.isOfType(s2d,IntroScene_Names )) selectScene( new MainMenu() ); }, 7*1000 );
+        //#end
     
     }
     

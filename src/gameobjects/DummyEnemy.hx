@@ -15,7 +15,7 @@ class DummyEnemy extends GameObject {
 
         useDummySprite_bottomCenter( 0x00C8FF,16,32 );
         
-        hitbox = sprite.getBounds();
+        //hitbox = sprite.getBounds();
 
         level.add( this.spriteBase, level.LAYER_ENTITIES );
 
@@ -39,20 +39,21 @@ class DummyEnemy extends GameObject {
 
         ability_dash_lastDash += 0.01;
 
-        if( playerInDistance(50) && ability_dash_cooldown==0 ){
-            speed = speed * 20;
-            ability_dash_cooldown = 1;
-            ability_dash_lastDash = 0;
-        }
-
         // movement
 
         var p1 = level.player;
 
-        var _canSeePlayer = (playerInDistance(200));  // && canSeeThrough( p1.asPoint() ));
+        var _canSeePlayer = ( playerInDistance(500) || (hxd.Key.isPressed(hxd.Key.MOUSE_LEFT)&&playerInDistance(1500)) );  // && canSeeThrough( p1.asPoint() ));
 
         if( level.player.isDucking )
             _canSeePlayer = playerInDistance(66);
+
+
+        if( _canSeePlayer && playerInDistance(50) && ability_dash_cooldown==0 ){
+            speed = speed * 20;
+            ability_dash_cooldown = 1;
+            ability_dash_lastDash = 0;
+        }
 
         if( _canSeePlayer )
             cast( sprite, h2d.Bitmap).color = h3d.Vector.fromColor(0xFFFFC400);
@@ -123,13 +124,16 @@ class DummyEnemy extends GameObject {
         }
 
         // can't leave "board"
-        var k=1000;
+        if( level.cageInsideScene( this ) ){
+            movingDirection = movingDirection+Math.PI+hxd.Math.random(Math.PI*0.2);
+        }
+        /*var k=1000;
         if( x<0 || x>k || y<0 || y>k )
             movingDirection = movingDirection+Math.PI+hxd.Math.random(Math.PI*0.2);
         if(movingDirection>Math.PI*2)
             movingDirection -= Math.PI*2;
         if(movingDirection<0)
-            movingDirection += Math.PI*2;
+            movingDirection += Math.PI*2;*/
     }
 
     function playerInDistance( distance:Float, offset_x:Float=0, offset_y:Float=0 ) {

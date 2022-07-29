@@ -7,7 +7,7 @@ class GoalPickup extends GameObject {
 
         useDummySprite_bottomCenter( 0x0E3D4A,16,12 );
         
-        hitbox = sprite.getBounds();
+        //hitbox = sprite.getBounds();
 
         level.add( this.spriteBase, level.LAYER_ENTITIES );
 

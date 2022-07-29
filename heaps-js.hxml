@@ -2,4 +2,5 @@ config.hxml
 
 -js build/heaps/js/Main.js
 
--D resourcesPath=res
+#-D resourcesPath=res
+-D resourcesPath=assets

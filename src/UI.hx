@@ -6,8 +6,8 @@ class UI {
 
     //public static final font : h2d.Font = null;
 
-    public static final COLOR_button_out  = 0xFF515151;//0xFF669999;
-    public static final COLOR_button_over = 0xFF490166;//0xFFb3cccc;
+    public static final COLOR_button_out  = 0xFF2D2D2D;//0xFF669999;
+    public static final COLOR_button_over = 0xFF3F0357;//0xFFb3cccc;
     public static final COLOR_button_push = 0xFF2C003D;//0xFF334d4d;
 
     public static function button_400x50( ?parent ) {
@@ -27,7 +27,7 @@ class UI {
         b.backgroundColor = COLOR_button_out;
         b.onOver = (e)->{ b.backgroundColor = COLOR_button_over; };
         b.onOut  = (e)->{ b.backgroundColor = COLOR_button_out;  };
-        b.onPush = (e)->{ b.backgroundColor = COLOR_button_push; if(sound==null)sound=hxd.Res.select_low; sound.play(); };
+        b.onPush = (e)->{ b.backgroundColor = COLOR_button_push; if(sound==null)sound=hxd.Res.sounds.select_low; sound.play(); };
         return b;
     }
 

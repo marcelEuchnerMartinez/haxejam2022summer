@@ -1,0 +1,9 @@
+@ECHO OFF
+@echo COMPILING...
+haxe heaps-js.hxml
+IF %ERRORLEVEL% EQU 0 ( 
+	@echo COMPILING SUCCESSFUL. ERRORLEVEL: %ERRORLEVEL%
+	explorer .\build\heaps\js\
+) ELSE (
+	@echo COMPILING FAILED. ERRORLEVEL: %ERRORLEVEL%
+)

@@ -1,17 +1,23 @@
 package;
 
 class IntroScene_Names extends UpdatableScene {
+
+    var flow : h2d.Flow;
+
+    var isFlickering : Bool = false;
+
     public function new() {
         super();
         //var t = UI.text( this );
         //t.text = "Intro scene";
 
         var f = new h2d.Flow( this );
-        f.verticalSpacing = 40;
+        f.verticalSpacing = 60;
         f.layout = h2d.Flow.FlowLayout.Vertical;
         f.horizontalAlign = h2d.Flow.FlowAlign.Middle;
         f.verticalAlign = h2d.Flow.FlowAlign.Middle;
         f.fillHeight = true; f.fillWidth = true;
+        flow = f;
 
         //var t = UI.text( f );
         //t.setPosition( 200,  50 );
@@ -26,9 +32,11 @@ class IntroScene_Names extends UpdatableScene {
             //t.setPosition( 200,  yy ); yy+=75;
             t.text = p;
             t.scale( 3 ); t.textColor = 0x0;// 0x3F0357;
-            haxe.Timer.delay( ()->{ t.x+=50; t.textColor = 0x3F0357; }, (i+2)*500 );
+            haxe.Timer.delay( ()->{ /*t.x+=50;*/ t.textColor = 0x600086; }, (i+1)*500 );
             i++;
         }
+
+        haxe.Timer.delay( ()->{ isFlickering=true; }, (i+4)*500 );
 
         //var t = UI.text( f );
         //t.setPosition( 200, 600 );
@@ -46,5 +54,8 @@ class IntroScene_Names extends UpdatableScene {
         super.update();
         if( hxd.Key.isPressed( hxd.Key.SPACE ) || hxd.Key.isPressed( hxd.Key.MOUSE_LEFT ) || hxd.Key.isPressed( hxd.Key.ESCAPE ) || hxd.Key.isPressed( hxd.Key.ENTER ) )
             Main_Draft.app.selectScene( new MainMenu() );
+
+        if( isFlickering )
+            flow.alpha = 0 + hxd.Math.random( 1 );
     }
 }

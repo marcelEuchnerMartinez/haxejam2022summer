@@ -57,6 +57,8 @@ class GameObject {
             sprite.remove();
         sprite = obj;
         spriteBase.addChild( sprite ); // sprite.parent = this // doesn't seem to work
+        //if(hitbox!=null)
+        //    get_hitbox();
         return sprite;
     }
 
@@ -90,17 +92,20 @@ class GameObject {
     //          helper/convenience methods
     //
 
-    public function placeAtRandomPosition( board_size:Int=1000 ) {
-        x = hxd.Math.random(board_size);
-        y = hxd.Math.random(board_size);
+    public function placeAtRandomPosition() {
+        x = hxd.Math.random(level.level_width );
+        y = hxd.Math.random(level.level_height);
     }
 
     public function toString_coordinates() {
         return '${Math.round(this.x*10)/10}|${Math.round(this.y*10)/10}';
     }
 
-    public function useDummySprite_bottomCenter( color=0xFF00FF, width=32, height=32, alpha=1 ) {
+    public function useDummySprite_bottomCenter( color=0xFF00FF, width=32, height=32, alpha=1, _useAsHitbox:Bool=true ) {
         var tile = h2d.Tile.fromColor( color, width, height, alpha ); tile.setCenterRatio( 0.5, 1 );
         sprite = new h2d.Bitmap( tile );
+
+        if(_useAsHitbox)
+            hitbox = sprite.getBounds();
     }
 }

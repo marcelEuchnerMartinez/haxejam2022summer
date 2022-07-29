@@ -11,7 +11,8 @@ class TestLevel01 extends Level {
     public function new() {
         super();
 
-        audio.playContinue( Audio.MusicState.THEME_INGAME );
+        audio.musicStopAll();
+        //audio.playContinue( Audio.MusicState.THEME_INGAME );
 
         var t = new h2d.Text( UI.font() );
         this.add( t, LAYER_HUD );
@@ -27,17 +28,25 @@ class TestLevel01 extends Level {
 
         //background_tilegroup.alpha = 0.2;
 
-        hud_currentLevel_h2dText.text = "TestLevel01";
+        hud_currentLevel_h2dText.text = '$this';
 
-        for( i in 0...4 ){
+        /*for( i in 0...4 ){
             var en = new DummyEnemy(this);
             //en.movingDirection = hxd.Math.random( Math.PI *2 );
             var p1 = this.player;
             en.movingDirection = hxd.Math.atan2( p1.y - y, p1.x - x );
             en.placeAtRandomPosition();
+        }*/
+
+        for( i in 0...1 ){
+            var o = new Ammunition(this);
+            o.placeAtRandomPosition();
+            //trace(o.hitbox);
         }
 
         //idea_dummywalls();
+
+        background_tilegroup_tilegrid.alpha = 0.1;
     }
 
     override public function update() {
@@ -87,8 +96,12 @@ class TestLevel01 extends Level {
     function idea_grid02() {
 
         // tileset
-        var k = 32;//32/2;
+        var k = 32/2;//32/2;
         var indent = false; // (every second line must be indented...)
+
+        level_width  = Math.floor(30 * k);
+        level_height = Math.floor(30 * k);
+
         for( y in 0...30 ){
             for( x in 0...30 ){
 
@@ -134,8 +147,8 @@ class TestLevel01 extends Level {
 
                 #end
                 
-                var tile = tilegroup_tile[0][0];
-                background_tilegroup.add( pos.x, pos.y-(k*1.5), tile ); // -(k + (k/2)) because the upper half of the tile is actually empty and also use the vertical center of the remaining tile
+                var tile = tileset_tilegrid[0][1];
+                background_tilegroup_tilegrid.add( pos.x, pos.y-(k*1.5), tile ); // -(k + (k/2)) because the upper half of the tile is actually empty and also use the vertical center of the remaining tile
                 //var tile = tilegroup_tile[1][0];
                 //background_tilegroup.add( pos.x, pos.y, tile ); // 17 / 2 ... ?? (8.5)
 
@@ -152,7 +165,7 @@ class TestLevel01 extends Level {
         for( y in 0...90 ){
             for( x in 0...30 ){
 
-                background_tilegroup.add( (x *k)+(indent?(k/2):0), y *(9/*17/2*/), tilegroup_tile[1][0] ); // 17 / 2 ... ?? (8.5)
+                background_tilegroup_tilegrid.add( (x *k)+(indent?(k/2):0), y *(9/*17/2*/), tileset_tilegrid[1][0] ); // 17 / 2 ... ?? (8.5)
 
                 //var random_index_x = Math.floor( Math.random() * 2 );
                 //var random_index_y = 0; //Math.floor( Math.random() * 2 );

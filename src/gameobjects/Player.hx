@@ -2,9 +2,13 @@ package gameobjects;
 
 class Player extends GameObject {
 
+    public var gun01_ammunition (default,set) = 8;
+    public var gun01_ammunition_loaded (default,set) = 8;
+    public var gun01_ammunition_loadedMax = 8;
+
     public var isUntouchable = false;
 
-    public var score : Int = 0;
+    public var score (default,set) : Int = 0;
 
     public var isDucking : Bool = false;
 
@@ -22,7 +26,7 @@ class Player extends GameObject {
 
         dummysprite_default();
         
-        hitbox = sprite.getBounds();
+        //hitbox = sprite.getBounds();
 
         level.add( this.spriteBase, level.LAYER_ENTITIES );
 
@@ -48,6 +52,11 @@ class Player extends GameObject {
             speed = speed * 10;
             ability_dash_cooldown = 1;
         }
+
+        #if debug
+        if( hxd.Key.isPressed(hxd.Key.NUMBER_1) )
+            trace(hitbox);
+        #end
 
         // normal movement
         if( !level.cam_dev.visible ){
@@ -99,18 +108,34 @@ class Player extends GameObject {
         level.cageInsideScene( this );
 
         // player can shoot
-        if( hxd.Key.isPressed(hxd.Key.MOUSE_LEFT) && isDucking==false ){
+        if( hxd.Key.isPressed(hxd.Key.MOUSE_LEFT) && isDucking==false && gun01_ammunition_loaded>0 ){
             var g = new h2d.Graphics();
             level.add( g, level.LAYER_ENTITIES );
             g.setPosition( spriteBase.x, spriteBase.y-24 );
+            g.lineStyle(1,0xFFFFFF);
             g.beginFill( 0x0 );
-            g.drawCircle( 0, 0, 4 );
-            hxd.Res.shot_1.play(false,0.2);
+            g.drawCircle( 0, 0, 2 );
+            hxd.Res.sounds.shot_1.play(false,0.2);
             bullets.push( g );
             //g.rotation = Math.atan2( level.mouseY - g.y, level.mouseX - g.x );
             var mouse = new h2d.col.Point( level.mouseX, level.mouseY );
             level.cam_player.sceneToCamera( mouse );
             g.rotation = Math.atan2( mouse.y - spriteBase.y, mouse.x - spriteBase.x );
+
+            gun01_ammunition_loaded-=1;
+            //update_playerScoreText();
+        }
+
+        // reload
+        if( hxd.Key.isPressed( hxd.Key.R ) ){
+            var _cartridges_to_charge = gun01_ammunition_loadedMax - gun01_ammunition_loaded;
+            for( i in 0..._cartridges_to_charge ){
+                if( gun01_ammunition>0 ){
+                    gun01_ammunition_loaded++;
+                    gun01_ammunition--;
+                    hxd.Res.sounds.select_low.play();
+                }
+            }
         }
 
         // move bullets
@@ -123,20 +148,22 @@ class Player extends GameObject {
                     en.placeAtRandomPosition();
                     b.remove();
                     score ++;
-                    level.player_score.text = 'score: $score';
+                    //update_playerScoreText();
                     //bullets.remove( b ); // ?
                 }
             }
         }
 
         // ducking
-        if( hxd.Key.isPressed( hxd.Key.CTRL ) || hxd.Key.isDown( hxd.Key.SHIFT ) ){
-            isDucking = true;
+        if( hxd.Key.isPressed( hxd.Key.CTRL ) || hxd.Key.isPressed( hxd.Key.SHIFT ) ){
+            //if(!isDucking)
             dummysprite_ducking();
+            isDucking = true;
         }
         if( hxd.Key.isReleased( hxd.Key.CTRL ) || hxd.Key.isReleased( hxd.Key.SHIFT ) ){
-            isDucking = false;
+            //if(isDucking)
             dummysprite_default();
+            isDucking = false;
         }
 
         // game over
@@ -158,6 +185,28 @@ class Player extends GameObject {
                 3*1000
             );
         }
+    }
+
+    function update_playerScoreText() {
+        level.player_score.text = 'score: $score\nmag. : $gun01_ammunition_loaded /$gun01_ammunition';
+    }
+
+    function set_score( v ) {
+        score = v;
+        update_playerScoreText();
+        return score;
+    }
+
+    function set_gun01_ammunition( v ) {
+        gun01_ammunition = v;
+        update_playerScoreText();
+        return gun01_ammunition;
+    }
+
+    function set_gun01_ammunition_loaded( v ) {
+        gun01_ammunition_loaded = v;
+        update_playerScoreText();
+        return gun01_ammunition_loaded;
     }
 
     function dummysprite_default() {

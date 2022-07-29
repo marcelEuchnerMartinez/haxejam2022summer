@@ -15,7 +15,8 @@
 
 #-main Main
 #-main Main_Draft
--main Isometric
+#-main Isometric
+-main Test_Tilesets
 
 
 -D debug=true

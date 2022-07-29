@@ -9,3 +9,5 @@
 #-lib haxeui-heaps
 
 -D debug=true
+
+-D music=true
