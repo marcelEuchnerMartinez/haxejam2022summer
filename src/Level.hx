@@ -118,7 +118,7 @@ class Level extends UpdatableScene {
         f.setPosition( this.width - f.outerWidth, 0 );
 
         var t = UI.text();
-        this.add( t, LAYER_HUD ); t.setPosition( width-150, 50 ); t.scale( 2 );
+        this.add( t, LAYER_HUD ); t.setPosition( width-150, 300 ); t.scale( 2 );
         player_score = t;
 
         // camera setup

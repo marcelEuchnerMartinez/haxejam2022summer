@@ -166,10 +166,15 @@ class Player extends GameObject {
         }
 
         // move bullets
+        //var bullet_as_point = new h2d.col.Point(0,0);
         for( b in bullets ){
             var s = 10;
             b.move( s, s );
+            //var iso = Isometric.isometricScreen_to_world( b.x, b.y );
+            //bullet_as_point.x = iso.x;
+            //bullet_as_point.y = iso.y;
             for( en in level.enemies ){
+                //if( en.hitbox.contains( bullet_as_point ) ){
                 if( hxd.Math.distanceSq( en.spriteBase.x-b.x, en.spriteBase.y-16-b.y )<256 ){ // -16 will be center of the enemy's body
                     //en.remove();
                     //en.placeAtRandomPosition();
