@@ -6,6 +6,7 @@ See: https://itch.io/jam/haxejam-2022-summer-jam/rate/1639049
 Or directly: https://amusei123.itch.io/haxejam2022summer
 
 
+---
 Credits
 
 ART: HAKKERWELL
