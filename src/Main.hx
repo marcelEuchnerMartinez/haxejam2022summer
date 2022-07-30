@@ -15,7 +15,8 @@ class Main extends hxd.App {
         #end
 
         #if usepak
-        hxd.Res.initPak();
+        //hxd.Res.initPak();
+        hxd.Res.initEmbed();
         #else
         hxd.Res.initLocal();
         #end
@@ -29,6 +30,7 @@ class Main extends hxd.App {
     
     //@:privateAccess haxe.MainLoop.add(() -> {});
     override function init() {
+
         @:privateAccess haxe.MainLoop.add(() -> {});
 
         Audio.playContinue( Audio.MusicState.THEME_LAUNCH );
