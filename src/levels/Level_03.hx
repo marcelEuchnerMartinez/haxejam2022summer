@@ -25,7 +25,7 @@ class Level_03 extends Level {
         useLevelSizeFromTextFileMap(txt);
 
         this.next_level = Level_Mall01;
-        this.next_level_scoreNeeded = 5;
+        this.next_level_scoreNeeded = 50;
 
         this.next_level_thisIsLastlevel = true;
 
