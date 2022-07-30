@@ -4,6 +4,6 @@
 *.zip
 
 /ignore/
-/res/
+/res_old/
 
 #devcompile.hxml

@@ -11,13 +11,16 @@ class Level_Mall01 extends Level {
     public function new() {
         super();
 
-        audio.playContinue( Audio.MusicState.THEME_INGAME );
+        Audio.playContinue( Audio.MusicState.THEME_INGAME );
 
         var t = new h2d.Text( UI.font() );
         this.add( t, LAYER_HUD );
         t.text = "Controls\nmove  - ARROW KEYS / W-A-S-D\ndash  - SPACE\nduck  - CTRL / SHIFT\nshoot - LEFT MOUSE";
         t.scale( 2 );
         t.setPosition( 0, this.height - t.getBounds().height );
+
+        this.next_level = Level_Mall01;
+        this.next_level_scoreNeeded = 150;
 
         new Player( this );
         //player.setPosition( this.width/2, this.height/2 );
@@ -29,7 +32,7 @@ class Level_Mall01 extends Level {
 
         hud_currentLevel_h2dText.text = '$this';
 
-        for( i in 0...4 ){
+        for( i in 0...20 ){
             var en = new DummyEnemy(this);
             //en.movingDirection = hxd.Math.random( Math.PI *2 );
             var p1 = this.player;
@@ -37,7 +40,7 @@ class Level_Mall01 extends Level {
             en.placeAtRandomPosition();
         }
 
-        for( i in 0...1 ){
+        for( i in 0...10 ){
             var o = new Ammunition(this);
             o.placeAtRandomPosition();
         }
@@ -94,8 +97,8 @@ class Level_Mall01 extends Level {
         // tileset
         var k = 64/2;//32/2;
         
-        level_width  = Math.floor(30 * k);
-        level_height = Math.floor(30 * k);
+        level_width  = Math.floor( 30 * k);
+        level_height = Math.floor( 30 * k);
 
         var indent = false; // (every second line must be indented...)
         for( y in 0...30 ){

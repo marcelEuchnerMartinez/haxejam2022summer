@@ -88,8 +88,21 @@ class DummyEnemy extends GameObject {
         }
 
         // move
-        x += Math.cos( movingDirection ) * speed;
-        y += Math.sin( movingDirection ) * speed;
+        var nx = x + Math.cos( movingDirection ) * speed;
+        var ny = y + Math.sin( movingDirection ) * speed;
+        var p = new h2d.col.Point( nx, ny );
+        var executeMove = true;
+        for( b in level.map_water ){
+            if( b.contains(p) ){
+                executeMove = false;
+            }
+        }
+        if(executeMove){
+            x = nx;
+            y = ny;
+        } else {
+            movingDirection = movingDirection+Math.PI;
+        }
 
         // collison with other enemies
         var k = 4;
@@ -134,6 +147,7 @@ class DummyEnemy extends GameObject {
             movingDirection -= Math.PI*2;
         if(movingDirection<0)
             movingDirection += Math.PI*2;*/
+
     }
 
     function playerInDistance( distance:Float, offset_x:Float=0, offset_y:Float=0 ) {

@@ -39,11 +39,13 @@ class Level extends UpdatableScene {
     public var smallUpdatables : Array<SmallUpdatableObject> = [];//Array<{obj:h2d.Object,f:()->{}}> = [];
 
     // specials
-    var music = false;
+    //var music = false;
 
     var player_health_bar : h2d.Graphics;
 
     // tilegroups / tilesets / background
+
+    //      floor
 
     public var background_tilegroup_tilegrid : h2d.TileGroup;
     public var tileset_tilegrid : Array<Array<h2d.Tile>>;
@@ -53,8 +55,30 @@ class Level extends UpdatableScene {
 
     public var background_tilegroup_asiaFloor01 : h2d.TileGroup;
     public var tileset_asiaFloor01 : Array<Array<h2d.Tile>>;
+
+    public var background_tilegroup_sand01 : h2d.TileGroup;
+    public var tileset_sand01 : Array<Array<h2d.Tile>>;
+
+    public var background_tilegroup_water01 : h2d.TileGroup;
+    public var tileset_water01 : Array<Array<h2d.Tile>>;
+
+    //      walls
+
+    public var background_tilegroup_wall01 : h2d.TileGroup;
+    public var tileset_wall01 : h2d.Tile;
     
     //public var allSpritesToYSort : Array< h2d.Object >;
+
+    // water
+
+    public var map_water : Array<h2d.col.Bounds> = [];
+
+    // 
+
+    public var next_level : Class<Level>;
+    public var next_level_button : h2d.Interactive;
+    public var next_level_scoreNeeded : Int = 1000;
+    public var next_level_thisIsLastlevel : Bool = false;
 
     public function new() {
         super();
@@ -70,6 +94,19 @@ class Level extends UpdatableScene {
         var a = addNewTilegroup( hxd.Res.Floor5_170 );
         background_tilegroup_asiaFloor01 = a.g;
         tileset_asiaFloor01 = a.t.grid( 170 );
+
+        var a = addNewTilegroup( hxd.Res.FloorSand );
+        background_tilegroup_sand01 = a.g;
+        tileset_sand01 = a.t.grid( 170 );
+
+        var a = addNewTilegroup( hxd.Res.FloorWater );
+        a.g.setDefaultColor(0x009DFF);
+        background_tilegroup_water01 = a.g;
+        tileset_water01 = a.t.grid( 170 );
+
+        var a = addNewTilegroup( hxd.Res.WallConcreteFront );
+        background_tilegroup_wall01 = a.g;
+        tileset_wall01 = a.t;// .grid( 170 );
 
 
         var f = new h2d.Flow();
@@ -117,18 +154,19 @@ class Level extends UpdatableScene {
         b.labelText("play/pause theme");
         b.onClick = (e)->{
             //var snd = new hxd.res.Sound( hxd.Res.Prototype_Theme.entry );
-            music = !music;
+            //music = !music;
             //SoundGroup.mono
-            if( !music ){
+            Audio.switchMuted();
+            /*if( Audio.isMuted ){
                 //hxd.snd.Manager.get().masterSoundGroup.mono = true;
-                audio.musicStopAll();
+                Audio.musicStopAll();
             }
                 //snd.play(true);
             else {
                 //audio.musicStopAll();
                 //audio.theme_ingame.play( true );
-                audio.playContinue( Audio.MusicState.THEME_INGAME );
-            }
+                Audio.playContinue( Audio.MusicState.THEME_INGAME );
+            }*/
                 //snd.stop();
         };
         var b = UI.button_160x16( dtp );
@@ -150,7 +188,7 @@ class Level extends UpdatableScene {
 
 
 
-        music = false;
+        //music = false;
 
         #end
 
@@ -158,12 +196,42 @@ class Level extends UpdatableScene {
 
         player_health_bar = new h2d.Graphics();
         this.add( player_health_bar, LAYER_HUD );
+
+
+        var b = UI.button(300,64); b.labelText("LOSE IT ALL!!!! GET CRAZY!!\n(click me)"); b.label.scale( 2 ); b.label.textColor = 0x9D00FF;
+        b.onClick = (e)->{
+            //randomColorTintForBackgroundTilegroups();
+            var en = new DummyEnemy(this);
+            //var k = 400;
+            //en.x = player.x - k + hxd.Math.random( k*2 );
+            //en.y = player.y - k + hxd.Math.random( k*2 );
+            en.placeAtRandomPosition_noWater();
+
+            player.crazySpritePlayer();
+            for( e in enemies ){
+                if(Math.random()>0.5)
+                    e.crazySprite_chairs();
+                else
+                    e.crazySprite_longStuff();
+            }
+                
+        };
+        this.add( b, LAYER_HUD ); b.setPosition( 0, 0 );
+
+        var b = UI.button(300,32); b.labelText("PROCEED TO NEXT LEVEL"); b.label.scale( 2 ); b.label.textColor = 0x00FF00;
+        b.onClick = (e)->{
+            Main.app.selectLevel( Type.createInstance(next_level, []) );
+        };
+        this.add( b, LAYER_HUD ); b.setPosition( 0, 64 );
+        b.visible = false;
+        next_level_button = b;
     }
 
     override function update() {
 
         // game objects to update
-        player.update();
+        if( player!=null )
+            player.update();
         for( en in enemies )
             en.update();
         for( i in items )
@@ -355,4 +423,45 @@ class Level extends UpdatableScene {
 			pos++;
 		}
 	}
+
+    function useLevelSizeFromTextFileMap( level_string:String, tileSize:Int=0 ) {
+        if(tileSize==0)
+            tileSize = Math.floor(170/2);
+        var x = 0;
+        var y = 0;
+        var xMax = 0;
+        var yMax = 0;
+        for( i in 0...level_string.length ){
+            var char = level_string.charAt( i );
+            switch( char ){
+                case "\n":
+                    y++;
+                    if(y>yMax)
+                        yMax = y;
+                    x=0;
+                default:
+                    if(x>xMax)
+                        xMax = x;
+            }
+            x++;
+            
+        }
+        this.level_width  = xMax *tileSize;
+        this.level_height = yMax *tileSize;
+        trace('Level size set by useLevelSizeFromTextFileMap: $level_width x $level_height');
+    }
+
+    public function randomColorTintForBackgroundTilegroups() {
+        var gs = [
+            background_tilegroup_tilegrid,
+            background_tilegroup_asiaFloor01,
+            background_tilegroup_sand01,
+            background_tilegroup_wall01,
+            background_tilegroup_mallFloor01
+        ];
+        for( g in gs )
+            g.setDefaultColor(Math.floor(hxd.Math.random(0xFFFFFF)));
+
+        background_tilegroup_asiaFloor01.setDefaultColor(Math.floor(hxd.Math.random(0xFFFFFF)));
+    }
 }

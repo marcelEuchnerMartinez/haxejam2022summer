@@ -22,7 +22,8 @@ class Ammunition extends GameObject {
         super.update();
         if( level.player.hitbox.intersects( this.hitbox ) ){
             level.player.gun01_ammunition += 18;
-            this.placeAtRandomPosition();
+            //this.placeAtRandomPosition();
+            this.placeAtRandomPosition_noWater();
         }
     }
 }

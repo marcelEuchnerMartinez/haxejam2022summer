@@ -8,6 +8,7 @@
 #-lib haxeui-core
 #-lib haxeui-heaps
 
--D debug=true
+-D debug
 
--D music=true
+#-D music_off
+-D pak=false

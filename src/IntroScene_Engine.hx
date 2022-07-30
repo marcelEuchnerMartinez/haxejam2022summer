@@ -7,7 +7,8 @@ class IntroScene_Engine extends UpdatableScene {
     public function new() {
         super();
 
-        audio.playContinue( Audio.MusicState.THEME_LAUNCH );
+        //trace("state is "+ Audio.music_state);
+        //Audio.playContinue( Audio.MusicState.THEME_LAUNCH );
 
         var f = new h2d.Flow( this );
         f.verticalSpacing = 40;

@@ -6,40 +6,47 @@ class Main extends hxd.App {
 
     public static var app : Main;
 
-    public static var audio : Audio;
-
     static function main() {
 
         app = new Main();
 
         #if sys
-        hxd.Res.initLocal();
         Sys.println("\n    Haxe Jam 2022 - summer\n\n    Game by Taxmann, Hakkerwell, Amusei123\n");
-        #else
-        //hxd.Res.initPak();
-        hxd.Res.initEmbed();
         #end
 
+        #if usepak
+        hxd.Res.initPak();
+        #else
+        hxd.Res.initLocal();
+        #end
+
+        //hxd.Res.initEmbed();
+
+        Audio.init();
     }
 
     var myscene : UpdatableScene;
     
+    //@:privateAccess haxe.MainLoop.add(() -> {});
     override function init() {
+        @:privateAccess haxe.MainLoop.add(() -> {});
 
-        audio = new Audio();
+        Audio.playContinue( Audio.MusicState.THEME_LAUNCH );
 
-        #if !music
-        audio.isMuted = true;
-        if(audio.isMuted)trace("MUSIC IS MUTED (!)");
+        
+        #if music_off
+        Audio.isMuted = true;
+        if(Audio.isMuted)trace("MUSIC IS MUTED (!)");
         #end
     
-        /*#if debug
-        selectLevel();
-        #else*/
+        #if dev
+        //selectLevel();
+        selectLevel( new Level_01() );
+        #else
         selectScene( new IntroScene_Engine() );
         haxe.Timer.delay( ()->{ if(Std.isOfType(s2d,IntroScene_Engine)) selectScene( new IntroScene_Names() ); }, 3*1000 );
         haxe.Timer.delay( ()->{ if(Std.isOfType(s2d,IntroScene_Names )) selectScene( new MainMenu() ); }, 7*1000 );
-        //#end
+        #end
     
     }
     
@@ -61,5 +68,11 @@ class Main extends hxd.App {
         myscene = scene;
         setScene( myscene );
     }
+
+    /*#if usepak
+    override function loadAssets(done) {
+        new hxd.fmt.pak.Loader(s2d, done);
+    }
+    #end*/
     
 }

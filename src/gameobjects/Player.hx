@@ -61,47 +61,74 @@ class Player extends GameObject {
         // normal movement
         if( !level.cam_dev.visible ){
 
+            //var nx = x;
+            //var ny = y;
+            //var p = new h2d.col.Point( nx, ny );
+            var p = new h2d.col.Point( x, y );
+
+            var executeMove = false;
+
             //var _iso_angle = Math.PI*0.5/3;
 
             if( hxd.Key.isDown(hxd.Key.RIGHT) || hxd.Key.isDown(hxd.Key.D) )
                 if(adaptMovementToIsometricScreen){
-                    this.x += speed;
-                    this.y += speed;
+                    p.x += speed;
+                    p.y += speed;
+                    executeMove = true;
                 }
                     //this.x += Math.cos( (Math.PI*0.0) + _iso_angle ) *speed;
                     //move_isoPos( speed, 0 );
                 else
-                    this.x += speed;
+                    p.x += speed;
 
             if( hxd.Key.isDown(hxd.Key.LEFT ) || hxd.Key.isDown(hxd.Key.A) )
                 if(adaptMovementToIsometricScreen){
-                    this.x -= speed;
-                    this.y -= speed;
+                    p.x -= speed;
+                    p.y -= speed;
+                    executeMove = true;
                 }
                     //this.x -= Math.cos( (Math.PI*1.0) + _iso_angle ) *speed;
                     //move_isoPos( -speed, 0 );
                 else
-                    this.x -= speed;
+                    p.x -= speed;
 
             if( hxd.Key.isDown(hxd.Key.DOWN ) || hxd.Key.isDown(hxd.Key.S) )
                 if(adaptMovementToIsometricScreen){
-                    this.x -= speed;
-                    this.y += speed;
+                    p.x -= speed;
+                    p.y += speed;
+                    executeMove = true;
                 }
                     //this.y += Math.sin( (Math.PI*1.5) + _iso_angle ) *speed;
                     //move_isoPos( 0, speed );
                 else
-                    this.y += speed;
+                    p.y += speed;
 
             if( hxd.Key.isDown(hxd.Key.UP   ) || hxd.Key.isDown(hxd.Key.W) )
                 if(adaptMovementToIsometricScreen){
-                    this.x += speed;
-                    this.y -= speed;
+                    p.x += speed;
+                    p.y -= speed;
+                    executeMove = true;
                 }
                     //this.y -= Math.sin( (Math.PI*0.5) + _iso_angle ) *speed;
                     //move_isoPos( 0, -speed );
                 else
-                    this.y -= speed;
+                    p.y -= speed;
+
+            // try movement
+            if(executeMove){
+                for( b in level.map_water ){
+                    if( b.contains(p) ){
+                        executeMove = false;
+                        trace('player $p stopped by $b');
+                    }
+                }
+            }
+
+            if(executeMove){
+                x = p.x;
+                y = p.y;
+                //trace("player moves");
+            }
         }
 
         // cage player
@@ -145,7 +172,8 @@ class Player extends GameObject {
             for( en in level.enemies ){
                 if( hxd.Math.distanceSq( en.spriteBase.x-b.x, en.spriteBase.y-16-b.y )<256 ){ // -16 will be center of the enemy's body
                     //en.remove();
-                    en.placeAtRandomPosition();
+                    //en.placeAtRandomPosition();
+                    en.placeAtRandomPosition_noWater();
                     b.remove();
                     score ++;
                     //update_playerScoreText();
@@ -178,7 +206,7 @@ class Player extends GameObject {
                 ()->{
                     score = 0;
                     isUntouchable = false;
-                    this.placeAtRandomPosition();
+                    this.placeAtRandomPosition_noWater();
                     lifepoints = lifepoints_max;
                     t.remove();
                 },
@@ -188,7 +216,36 @@ class Player extends GameObject {
     }
 
     function update_playerScoreText() {
-        level.player_score.text = 'score: $score\nmag. : $gun01_ammunition_loaded /$gun01_ammunition';
+        level.player_score.text = 'score: $score\nmag. : $gun01_ammunition_loaded /$gun01_ammunition\n${level.next_level_scoreNeeded-score} to go!';
+
+        if( this.gun01_ammunition_loaded==0 )
+            level.player_score.text += "\nRELOAD\nWITH R!!";
+        level.player_score.textColor = 0xFFFFFF;
+
+        if( this.gun01_ammunition==0 ){
+            level.player_score.text += "\nSEARCH FOR\nAMMO!!";
+            level.player_score.textColor = 0xFF0000;
+        }
+
+        if( score >= level.next_level_scoreNeeded )
+            level.next_level_button.visible = true;
+
+        if( score == level.next_level_scoreNeeded ) {
+            var t = UI.text(); t.scale(3); t.textColor = 0x00FF00;
+            t.text = 'YOU DID IT!!!\nYOU\'RE A REAL SPY!';
+                if( level.next_level_thisIsLastlevel ){
+                    t.textColor = 0x3700FF;
+                    t.text ='YOU BEAT THE GAME!!!\nYOU\'RE A SUPER SUMMER SPY!\nHAVE A GREAT SUMMER!!!! >:D';
+                }
+            level.add( t, level.LAYER_HUD );
+            t.setPosition( (level.width/2) - (t.textWidth/2), level.height/2 );
+            haxe.Timer.delay(
+                ()->{
+                    t.remove();
+                },
+                ( level.next_level_thisIsLastlevel? 10*1000 : 5*1000 )
+            );
+        }
     }
 
     function set_score( v ) {

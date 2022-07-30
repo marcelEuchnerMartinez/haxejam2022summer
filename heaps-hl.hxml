@@ -6,5 +6,9 @@ config.hxml
 
 -hl build/heaps/hl/Main.hl
 
--D resourcesPath=assets
-#-D resourcesPath=res
+#-D resourcesPath=assets
+-D resourcesPath=res
+
+#-D music_off
+#-D usepak
+#-D dev

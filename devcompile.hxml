@@ -6,7 +6,8 @@
 #-lib haxeui-core
 #-lib haxeui-heaps
 
--D resourcesPath=assets
+#-D resourcesPath=assets
+-D resourcesPath=res
 
 #-hl build/heaps/hl/Main.hl
 -hl run.hl
@@ -16,7 +17,8 @@
 #-main Main
 #-main Main_Draft
 #-main Isometric
--main Test_Tilesets
+#-main Test_Tilesets
+-main Test_Audio
 
 
 -D debug=true

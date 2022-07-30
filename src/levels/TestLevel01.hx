@@ -11,7 +11,7 @@ class TestLevel01 extends Level {
     public function new() {
         super();
 
-        audio.musicStopAll();
+        Audio.musicStopAll();
         //audio.playContinue( Audio.MusicState.THEME_INGAME );
 
         var t = new h2d.Text( UI.font() );

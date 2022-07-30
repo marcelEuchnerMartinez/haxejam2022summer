@@ -92,9 +92,75 @@ class GameObject {
     //          helper/convenience methods
     //
 
+    public function crazySpritePlayer() {
+        var tile = hxd.Res.Flowers.toTile();
+        tile.scaleToSize(64,192);
+        tile.setCenterRatio( 0.5, 1 );
+        sprite = new h2d.Bitmap( tile );
+
+        hitbox = sprite.getBounds();
+    }
+
+    public function crazySprite_chairs() {
+        var options = [
+            hxd.Res.ChairsLeft,
+            hxd.Res.ChairsRight,
+            hxd.Res.ChairsBack,
+            hxd.Res.ChairsFront
+        ];
+        var tile = randomElement( options ).toTile();
+        tile.scaleToSize(64,64);
+        tile.setCenterRatio( 0.5, 1 );
+        sprite = new h2d.Bitmap( tile );
+
+        hitbox = sprite.getBounds();
+    }
+
+    public function crazySprite_longStuff() {
+        var options = [
+            hxd.Res.Lamp,
+            hxd.Res.WallGlassSide
+        ];
+        var tile = randomElement( options ).toTile();
+        tile.scaleToSize(64,192);
+        tile.setCenterRatio( 0.5, 1 );
+        sprite = new h2d.Bitmap( tile );
+
+        hitbox = sprite.getBounds();
+    }
+
+    static function randomElement( array ) {
+        var random_index = Math.floor( Math.random() * (array.length) );
+        return array[random_index];
+    }
+
     public function placeAtRandomPosition() {
         x = hxd.Math.random(level.level_width );
         y = hxd.Math.random(level.level_height);
+    }
+
+    public function placeAtRandomPosition_noWater(_trace:Bool=false) {
+        var water = true;
+        var p = new h2d.col.Point(0,0);
+        var k = 50; //margin
+        while( water ){
+            p.x = k+hxd.Math.random(level.level_width -k);
+            p.y = k+hxd.Math.random(level.level_height-k);
+            if(_trace)
+                trace('GameObject tries random $p');
+            water = false;
+            for( b in level.map_water ){
+                if( b.contains(p) ){
+                    water=true;
+                    if(_trace)
+                        trace('Water at $p because $b');
+                }
+            }
+        }
+        if(_trace)
+            trace('GameObject success with $p');
+        x = p.x;
+        y = p.y;
     }
 
     public function toString_coordinates() {

@@ -11,7 +11,7 @@ class Level_Asia01 extends Level {
     public function new() {
         super();
 
-        audio.playContinue( Audio.MusicState.THEME_BEGINNERAREA );
+        Audio.playContinue( Audio.MusicState.THEME_BEGINNERAREA );
 
         var t = new h2d.Text( UI.font() );
         this.add( t, LAYER_HUD );
@@ -19,6 +19,9 @@ class Level_Asia01 extends Level {
         t.text = "Controls\nmove   - ARROW KEYS / W-A-S-D\ndash   - SPACE\nduck   - CTRL / SHIFT\nshoot  - LEFT MOUSE\nreload - R";
         t.scale( 2 );
         t.setPosition( 0, this.height - t.getBounds().height );
+
+        this.next_level = Level_01;
+        this.next_level_scoreNeeded = 10;
 
         new Player( this );
         //player.setPosition( this.width/2, this.height/2 );
@@ -30,7 +33,7 @@ class Level_Asia01 extends Level {
 
         hud_currentLevel_h2dText.text = '$this';
 
-        for( i in 0...4 ){
+        for( i in 0...5 ){
             var en = new DummyEnemy(this);
             //en.movingDirection = hxd.Math.random( Math.PI *2 );
             var p1 = this.player;
@@ -41,6 +44,16 @@ class Level_Asia01 extends Level {
         for( i in 0...1 ){
             var o = new Ammunition(this);
             o.placeAtRandomPosition();
+        }
+
+        for( i in 0...50 ){
+            var bmp = new h2d.Bitmap( hxd.Res.WallConcreteFront.toTile() );
+            this.add( bmp, LAYER_ENTITIES );
+            bmp.x = 0 + (i*(170/2));//100 + (i*98);
+            bmp.y = 0;//100;
+            var p = Isometric.world_to_IsometricScreen( bmp.x, bmp.y );
+            bmp.setPosition( p.x, p.y );
+            bmp.y -= hxd.Res.WallConcreteFront.getSize().height;
         }
 
         //idea_dummywalls();
@@ -59,8 +72,8 @@ class Level_Asia01 extends Level {
         level_height = Math.floor(30 * k);
 
         var indent = false; // (every second line must be indented...)
-        for( y in 0...30 ){
-            for( x in 0...30 ){
+        for( y in 0...40 ){
+            for( x in 0...40 ){
 
                 // iso converting test
                 var pos = Isometric.world_to_IsometricScreen( x *k, y *k );
