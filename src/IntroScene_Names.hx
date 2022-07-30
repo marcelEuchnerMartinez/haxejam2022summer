@@ -53,7 +53,7 @@ class IntroScene_Names extends UpdatableScene {
     override function update() {
         super.update();
         if( hxd.Key.isPressed( hxd.Key.SPACE ) || hxd.Key.isPressed( hxd.Key.MOUSE_LEFT ) || hxd.Key.isPressed( hxd.Key.ESCAPE ) || hxd.Key.isPressed( hxd.Key.ENTER ) )
-            Main_Draft.app.selectScene( new MainMenu() );
+            Main.app.selectScene( new MainMenu() );
 
         if( isFlickering )
             flow.alpha = 0 + hxd.Math.random( 1 );

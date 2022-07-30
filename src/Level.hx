@@ -77,7 +77,7 @@ class Level extends UpdatableScene {
         f.layout = h2d.Flow.FlowLayout.Vertical;
         menuPanel = f;
         var b = UI.button_160x40(f); b.labelText("Main menu");
-        b.onClick = (e)->{ Main_Draft.app.selectScene( new MainMenu() );};
+        b.onClick = (e)->{ Main.app.selectScene( new MainMenu() );};
         f.setPosition( this.width - f.outerWidth, 0 );
 
         var t = UI.text();
@@ -237,6 +237,19 @@ class Level extends UpdatableScene {
             layer = LAYER_BACKGROUND;
         this.add( g, layer );
         return { g:g, t:tileset };
+    }
+
+    function assgnmf( w0:h2d.col.Point, w1:h2d.col.Point, o:h2d.col.Point ) {
+        var s0 = w0.y - w1.y;
+        var s1 = w0.x - w1.x;
+        var b = new h2d.col.Bounds(); b.addPoint(w0); b.addPoint(w1);
+        /*if( b.contains(o) ){
+            var m = 0;
+            var v = Isometric.isometricScreen_to_world(o.x,o.y);
+            if( v < (0) )
+                return true;
+        }*/
+        return false;
     }
 
     public function cageInsideScene( o:GameObject ) : Bool/*{check:Bool,angle:Float}*/ {

@@ -1,7 +1,7 @@
 -cp src
 #-p res
-#-main Main
--main Main_Draft
+-main Main
+#-main Main_HaxeUI
 
 -lib heaps
 

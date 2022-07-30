@@ -34,14 +34,14 @@ class MainMenu extends UpdatableScene {
         button_play = UI.button( 400, 100, f ); //button_play.backgroundColor = 0xFF3F0357;// 0xFF6BD29E;
         var button_credits = UI.button( 400, 50, f ); //button_credits.backgroundColor = 0xFF3F0357;//0xFF0F1469;
         #if debug
-        var b = UI.button( 400, 25, f ); b.labelText("TestLevel01"); b.onClick = (e)->{ Main_Draft.app.selectScene( new TestLevel01() ); }
-        var b = UI.button( 400, 25, f ); b.labelText("Level Mall 01"); b.onClick = (e)->{ Main_Draft.app.selectScene( new Level_Mall01() ); }
+        var b = UI.button( 400, 25, f ); b.labelText("TestLevel01"); b.onClick = (e)->{ Main.app.selectScene( new TestLevel01() ); }
+        var b = UI.button( 400, 25, f ); b.labelText("Level Mall 01"); b.onClick = (e)->{ Main.app.selectScene( new Level_Mall01() ); }
         #end
         var button_quit = UI.button( 400, 50, f ); //button_quit.backgroundColor = 0xFF3F0357;//0xFF690F0F;
 
         //button_quit.y += 60;
         button_play.onClick = (e)->{
-            Main_Draft.app.selectLevel( new Level_Asia01() );
+            Main.app.selectLevel( new Level_Asia01() );
             //hxd.Res.sounds.select_low.play();
         };
         var default_function = button_play.onOver;
@@ -61,7 +61,7 @@ class MainMenu extends UpdatableScene {
         };
 
         button_credits.onClick = (e)->{
-            Main_Draft.app.selectScene( new IntroScene_Engine() );
+            Main.app.selectScene( new IntroScene_Engine() );
             //hxd.Res.select_low.play();
         };
 
